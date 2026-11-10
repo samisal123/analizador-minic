@@ -11,7 +11,7 @@ static Token *tokens;      /* buffer generado por el analizador léxico */
 static int i;              /* posición del lookahead en el buffer */
 static Token *lookahead;
 static int errores;
-static int panico;         /* 1 desde que se detecta un error */
+static int panico;         /* 1 desde que se detecta un error hasta sincronizar */
 
 /* Texto de cada terminal para los mensajes de error. */
 static const char *esperado[] = {
@@ -48,7 +48,9 @@ static void avanzar(void)
     if (lookahead->tipo != FIN) lookahead = &tokens[++i];
 }
 
-/* Reporta el error en la posición del lookahead. Solo se reporta el primero. */
+/* Reporta el error en la posición del lookahead y activa el modo pánico.
+   Mientras dura el pánico no se reportan más errores, para evitar cascadas.
+   Las funciones recursivas regresan de inmediato en pánico para no ciclar sin consumir. */
 static void error(const char *que)
 {
     if (panico) return;
@@ -67,18 +69,45 @@ static void match(TipoToken t)
     else error(esperado[t]);
 }
 
+/*
+ * Modo pánico: descarta tokens hasta el conjunto de sincronización { ';', '}', $ }.
+ * Si en el camino se abre un bloque, se descarta completo, de modo que un error en el
+ * encabezado de un if/while no deja llaves sueltas. Si la sentencia era un if, también
+ * se descarta su parte else.
+ */
+static void sincronizar(int era_if)
+{
+    int nivel = 0;
+    while (lookahead->tipo != FIN) {
+        TipoToken t = lookahead->tipo;
+        if (t == RBRACE && nivel == 0) break;      /* lo consume el bloque que contiene al error */
+        avanzar();
+        if (t == LBRACE) nivel++;
+        else if (t == RBRACE && --nivel == 0 && !(era_if && lookahead->tipo == ELSE)) break;
+        else if (t == SEMICOLON && nivel == 0) break;
+    }
+    panico = 0;
+}
+
 /* programa → lista_sent $ */
 static void programa(void)
 {
-    lista_sentencias();
-    if (lookahead->tipo != FIN) error("una sentencia o fin de archivo");
+    for (;;) {
+        lista_sentencias();
+        if (lookahead->tipo == FIN) return;
+        error("una sentencia o fin de archivo");   /* '}' sin '{' que lo abra */
+        avanzar();
+        panico = 0;
+    }
 }
 
 /* lista_sent → sentencia lista_sent | ε        FOLLOW(lista_sent) = { '}', $ } */
 static void lista_sentencias(void)
 {
     if (panico || lookahead->tipo == RBRACE || lookahead->tipo == FIN) return;
+    int era_if = lookahead->tipo == IF;
     sentencia();
+    if (panico) sincronizar(era_if);
     lista_sentencias();
 }
 
