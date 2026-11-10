@@ -1,0 +1,11 @@
+build/
+analizador
+analizador.exe
+*.o
+docs/*.aux
+docs/*.log
+docs/*.out
+docs/*.toc
+docs/*.fls
+docs/*.fdb_latexmk
+docs/*.synctex.gz
