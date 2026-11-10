@@ -1,0 +1,20 @@
+/* Máximo común divisor por restas sucesivas y factorial */
+int a, b, mcd;
+int n, fact;
+a = 48;
+b = 18;
+while (a != b) {
+    if (a > b) {
+        a = a - b;
+    } else {
+        b = b - a;
+    }
+}
+mcd = a;
+
+n = 5;
+fact = 1;
+while (n > 1) {
+    fact = fact * n;
+    n = n - 1;
+}

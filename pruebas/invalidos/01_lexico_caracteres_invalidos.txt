@@ -1,0 +1,7 @@
+// Errores esperados: caracteres que no pertenecen al alfabeto de MiniC.
+// Al descartar '@' y '#' quedan dos números seguidos, lo que además
+// produce dos errores sintácticos.
+int x, año;
+x = 5 @ 3;
+x = x # 2;
+x = $10;

@@ -1,0 +1,6 @@
+// Errores esperados: falta ';' al final de asignación y de declaración
+int a
+int b;
+a = 1
+b = 2;
+b = a + ;

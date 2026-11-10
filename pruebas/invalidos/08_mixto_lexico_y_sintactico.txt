@@ -1,0 +1,9 @@
+// Errores esperados: léxicos y sintácticos en el mismo archivo;
+// el analizador debe reportar todos y continuar
+int x, y;
+x = 10 @;
+if (x > 5 {
+    y = x * 2;
+}
+y = 3.1.4 + ;
+}

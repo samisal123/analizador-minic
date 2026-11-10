@@ -1,0 +1,6 @@
+// Errores esperados: número con dos puntos decimales, número sin parte
+// decimal e identificador que inicia con dígito
+float pi, r;
+pi = 3.14.15;
+r = 2.;
+2radio = 10;

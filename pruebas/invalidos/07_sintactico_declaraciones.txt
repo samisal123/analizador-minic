@@ -1,0 +1,6 @@
+// Errores esperados: declaraciones sin identificador, con número
+// o con identificadores sin coma
+int ;
+float 5;
+int a b;
+int c,;

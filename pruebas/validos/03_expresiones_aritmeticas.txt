@@ -1,0 +1,11 @@
+// Precedencia, asociatividad, paréntesis anidados y menos unario
+int a, b, c, r;
+float x;
+a = 7;
+b = -3;
+c = a - b - 1;
+r = a + b * c - 4 / 2;
+r = (a + b) * (c - (a / 2));
+r = -(a + b) * -c;
+x = 3.1416 * 2.0 * 10;
+x = ((((x))));

@@ -1,0 +1,5 @@
+// Errores esperados: paréntesis sin cerrar y paréntesis de más
+int x, y;
+x = (10 + 5;
+y = (x * 2));
+y = ();

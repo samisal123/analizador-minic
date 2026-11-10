@@ -1,0 +1,5 @@
+// Error esperado: comentario de bloque que nunca se cierra
+int x;
+x = 1;
+/* este comentario no termina
+x = 2;
