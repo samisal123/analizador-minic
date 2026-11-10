@@ -25,5 +25,17 @@ int main(int argc, char *argv[])
                nombre_token(tokens[i].tipo), tokens[i].lexema);
     imprimir_tabla_simbolos();
 
-    return errores_lexicos() ? 1 : 0;
+    printf("\n== Análisis sintáctico ==\n");
+    int err_sintacticos = analisis_sintactico(tokens);
+    int err_lexicos = errores_lexicos();
+    if (err_sintacticos == 0) printf("Sin errores sintácticos.\n");
+
+    printf("\n== Resultado ==\n");
+    if (err_lexicos == 0 && err_sintacticos == 0) {
+        printf("El programa es léxica y sintácticamente válido.\n");
+        return 0;
+    }
+    printf("El programa NO es válido (errores léxicos: %d, errores sintácticos: %d).\n",
+           err_lexicos, err_sintacticos);
+    return 1;
 }
