@@ -119,7 +119,7 @@ El script `pruebas/ejecutar_pruebas.sh` corre el analizador sobre cada archivo d
 | Archivo | Qué prueba |
 |---|---|
 | `validos/01_ejemplo_enunciado.txt` | Programa de ejemplo de la asignación |
-| `validos/02_declaraciones_y_comentarios.txt` | Declaraciones simples y múltiples, comentarios de línea y de bloque |
+| `validos/02_declaraciones_y_comentarios.txt` | Declaraciones simples, múltiples y con inicialización; comentarios de línea y de bloque |
 | `validos/03_expresiones_aritmeticas.txt` | Precedencia, asociatividad, paréntesis anidados, menos unario, decimales |
 | `validos/04_condicionales.txt` | `if`, `if-else`, cadena `else if`, `if` anidados, bloque vacío |
 | `validos/05_ciclos_anidados.txt` | `while` anidados con condicionales en el cuerpo |
@@ -130,7 +130,7 @@ El script `pruebas/ejecutar_pruebas.sh` corre el analizador sobre cada archivo d
 | `invalidos/04_sintactico_parentesis.txt` | Paréntesis sin cerrar, de más y vacíos |
 | `invalidos/05_sintactico_punto_y_coma.txt` | Falta de `;` en declaración y asignación, operando faltante |
 | `invalidos/06_sintactico_estructuras_control.txt` | `if` sin paréntesis, condición incompleta, `else` sin `if`, bloque sin cerrar |
-| `invalidos/07_sintactico_declaraciones.txt` | Declaraciones sin identificador, con número o sin coma |
+| `invalidos/07_sintactico_declaraciones.txt` | Declaraciones sin identificador, con número, sin coma o con inicialización incompleta |
 | `invalidos/08_mixto_lexico_y_sintactico.txt` | Errores léxicos y sintácticos en el mismo archivo |
 
 ## Estructura
@@ -155,7 +155,7 @@ docs/               Documento técnico (PDF y fuente LaTeX)
 | Delimitadores | `;` `,` `(` `)` `{` `}` |
 | Comentarios | De línea (`// ...`) y de bloque (`/* ... */`) |
 
-Construcciones: declaraciones (`int a, b;`), asignaciones con expresiones aritméticas, `if` con `else` y `else if` opcionales, y `while`. Los cuerpos de `if`, `else` y `while` siempre van entre llaves; con eso la gramática no tiene la ambigüedad del `else` colgante y es LL(1).
+Construcciones: declaraciones con inicialización opcional (`int a, b = 2;`), asignaciones con expresiones aritméticas, `if` con `else` y `else if` opcionales, y `while`. Los cuerpos de `if`, `else` y `while` siempre van entre llaves; con eso la gramática no tiene la ambigüedad del `else` colgante y es LL(1).
 
 La gramática completa en BNF, los conjuntos FIRST y FOLLOW, la tabla LL(1) y la descripción del manejo de errores están en [`docs/documento_tecnico.pdf`](docs/documento_tecnico.pdf).
 

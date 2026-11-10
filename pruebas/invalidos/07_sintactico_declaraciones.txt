@@ -1,6 +1,8 @@
 // Errores esperados: declaraciones sin identificador, con número
-// o con identificadores sin coma
+// con identificadores sin coma o con inicialización incompleta
 int ;
 float 5;
 int a b;
 int c,;
+int d = ;
+float e = 1.5 f;

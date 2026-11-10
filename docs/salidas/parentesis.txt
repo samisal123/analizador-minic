@@ -1,0 +1,46 @@
+Archivo: pruebas/invalidos/04_sintactico_parentesis.txt
+
+== Análisis léxico ==
+
+Tokens reconocidos
+LÍNEA  COL  TOKEN           LEXEMA
+    2    1  INT             int
+    2    5  ID              x
+    2    6  COMMA           ,
+    2    8  ID              y
+    2    9  SEMICOLON       ;
+    3    1  ID              x
+    3    3  ASSIGN          =
+    3    5  LPAREN          (
+    3    6  NUMBER          10
+    3    9  PLUS            +
+    3   11  NUMBER          5
+    3   12  SEMICOLON       ;
+    4    1  ID              y
+    4    3  ASSIGN          =
+    4    5  LPAREN          (
+    4    6  ID              x
+    4    8  TIMES           *
+    4   10  NUMBER          2
+    4   11  RPAREN          )
+    4   12  RPAREN          )
+    4   13  SEMICOLON       ;
+    5    1  ID              y
+    5    3  ASSIGN          =
+    5    5  LPAREN          (
+    5    6  RPAREN          )
+    5    7  SEMICOLON       ;
+    6    1  FIN             $
+
+Tabla de símbolos
+IDENTIFICADOR         LÍNEA  APARICIONES
+x                         2            3
+y                         2            3
+
+== Análisis sintáctico ==
+Error sintáctico en línea 3, columna 12: Se esperaba ')' antes de ';'.
+Error sintáctico en línea 4, columna 12: Se esperaba ';' antes de ')'.
+Error sintáctico en línea 5, columna 6: Se esperaba identificador, número, '(' o '-' antes de ')'.
+
+== Resultado ==
+El programa NO es válido (errores léxicos: 0, errores sintácticos: 3).

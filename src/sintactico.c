@@ -29,6 +29,7 @@ static void sentencia(void);
 static void declaracion(void);
 static void tipo(void);
 static void lista_id(void);
+static void inicializacion(void);
 static void asignacion(void);
 static void sent_if(void);
 static void parte_else(void);
@@ -123,11 +124,12 @@ static void sentencia(void)
     }
 }
 
-/* declaracion → tipo id lista_id ; */
+/* declaracion → tipo id inicializacion lista_id ; */
 static void declaracion(void)
 {
     tipo();
     match(ID);
+    inicializacion();
     lista_id();
     match(SEMICOLON);
 }
@@ -139,16 +141,27 @@ static void tipo(void)
     else match(FLOAT);
 }
 
-/* lista_id → , id lista_id | ε */
+/* lista_id → , id inicializacion lista_id | ε */
 static void lista_id(void)
 {
     if (panico) return;
     if (lookahead->tipo == COMMA) {
         match(COMMA);
         match(ID);
+        inicializacion();
         lista_id();
     }
     /* ε-producción: el ';' lo verifica declaracion() */
+}
+
+/* inicializacion → = E | ε */
+static void inicializacion(void)
+{
+    if (panico) return;
+    if (lookahead->tipo == ASSIGN) {
+        match(ASSIGN);
+        E();
+    }
 }
 
 /* asignacion → id = E ; */

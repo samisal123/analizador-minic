@@ -1,0 +1,62 @@
+Archivo: pruebas/validos/01_ejemplo_enunciado.txt
+
+== Análisis léxico ==
+
+Tokens reconocidos
+LÍNEA  COL  TOKEN           LEXEMA
+    1    1  INT             int
+    1    5  ID              x
+    1    6  SEMICOLON       ;
+    2    1  INT             int
+    2    5  ID              y
+    2    6  SEMICOLON       ;
+    3    1  ID              x
+    3    3  ASSIGN          =
+    3    5  NUMBER          10
+    3    7  SEMICOLON       ;
+    4    1  ID              y
+    4    3  ASSIGN          =
+    4    5  ID              x
+    4    7  PLUS            +
+    4    9  NUMBER          5
+    4   10  SEMICOLON       ;
+    5    1  IF              if
+    5    4  LPAREN          (
+    5    5  ID              y
+    5    7  GREATER         >
+    5    9  NUMBER          10
+    5   11  RPAREN          )
+    5   13  LBRACE          {
+    6    5  ID              x
+    6    7  ASSIGN          =
+    6    9  ID              y
+    6   11  TIMES           *
+    6   13  NUMBER          2
+    6   14  SEMICOLON       ;
+    7    1  RBRACE          }
+    8    1  WHILE           while
+    8    7  LPAREN          (
+    8    8  ID              x
+    8   10  GREATER         >
+    8   12  NUMBER          0
+    8   13  RPAREN          )
+    8   15  LBRACE          {
+    9    5  ID              x
+    9    7  ASSIGN          =
+    9    9  ID              x
+    9   11  MINUS           -
+    9   13  NUMBER          1
+    9   14  SEMICOLON       ;
+   10    1  RBRACE          }
+   11    1  FIN             $
+
+Tabla de símbolos
+IDENTIFICADOR         LÍNEA  APARICIONES
+x                         1            7
+y                         2            4
+
+== Análisis sintáctico ==
+Sin errores sintácticos.
+
+== Resultado ==
+El programa es léxica y sintácticamente válido.

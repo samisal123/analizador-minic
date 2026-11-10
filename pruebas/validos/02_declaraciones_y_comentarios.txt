@@ -1,7 +1,9 @@
-// Declaraciones simples y múltiples, con ambos tipos de comentario
+// Declaraciones simples, múltiples y con inicialización, con ambos tipos de comentario
 int contador;
 int a, b, c;
 float promedio, _total1;
+int limite = 10, paso = limite / 2, k;
+float tasa = -0.5;
 
 /* Comentario de bloque
    en varias líneas */

@@ -1,0 +1,48 @@
+== Programas válidos ==
+  ACEPTADO   pruebas/validos/01_ejemplo_enunciado.txt
+  ACEPTADO   pruebas/validos/02_declaraciones_y_comentarios.txt
+  ACEPTADO   pruebas/validos/03_expresiones_aritmeticas.txt
+  ACEPTADO   pruebas/validos/04_condicionales.txt
+  ACEPTADO   pruebas/validos/05_ciclos_anidados.txt
+  ACEPTADO   pruebas/validos/06_programa_completo.txt
+
+== Programas inválidos ==
+  RECHAZADO  pruebas/invalidos/01_lexico_caracteres_invalidos.txt
+             Error léxico en línea 4, columna 8: identificador con caracteres no válidos 'año'.
+             Error léxico en línea 5, columna 7: carácter no válido '@'.
+             Error léxico en línea 6, columna 7: carácter no válido '#'.
+             Error léxico en línea 7, columna 5: carácter no válido '$'.
+             Error sintáctico en línea 5, columna 9: Se esperaba ';' antes de '3'.
+             Error sintáctico en línea 6, columna 9: Se esperaba ';' antes de '2'.
+  RECHAZADO  pruebas/invalidos/02_lexico_literales_mal_formados.txt
+             Error léxico en línea 4, columna 6: número mal formado '3.14.15'.
+             Error léxico en línea 5, columna 5: número mal formado '2.'.
+             Error léxico en línea 6, columna 1: identificador mal formado '2radio'.
+  RECHAZADO  pruebas/invalidos/03_lexico_comentario_sin_cerrar.txt
+             Error léxico en línea 4, columna 1: comentario de bloque sin cerrar.
+  RECHAZADO  pruebas/invalidos/04_sintactico_parentesis.txt
+             Error sintáctico en línea 3, columna 12: Se esperaba ')' antes de ';'.
+             Error sintáctico en línea 4, columna 12: Se esperaba ';' antes de ')'.
+             Error sintáctico en línea 5, columna 6: Se esperaba identificador, número, '(' o '-' antes de ')'.
+  RECHAZADO  pruebas/invalidos/05_sintactico_punto_y_coma.txt
+             Error sintáctico en línea 3, columna 1: Se esperaba ';' antes de 'int'.
+             Error sintáctico en línea 5, columna 1: Se esperaba ';' antes de 'b'.
+             Error sintáctico en línea 6, columna 9: Se esperaba identificador, número, '(' o '-' antes de ';'.
+  RECHAZADO  pruebas/invalidos/06_sintactico_estructuras_control.txt
+             Error sintáctico en línea 5, columna 4: Se esperaba '(' antes de 'x'.
+             Error sintáctico en línea 8, columna 12: Se esperaba identificador, número, '(' o '-' antes de ')'.
+             Error sintáctico en línea 11, columna 1: Se esperaba una sentencia (declaración, asignación, if o while) antes de 'else'.
+             Error sintáctico en línea 16, columna 1: Se esperaba '}' antes de fin de archivo.
+  RECHAZADO  pruebas/invalidos/07_sintactico_declaraciones.txt
+             Error sintáctico en línea 3, columna 5: Se esperaba identificador antes de ';'.
+             Error sintáctico en línea 4, columna 7: Se esperaba identificador antes de '5'.
+             Error sintáctico en línea 5, columna 7: Se esperaba ';' antes de 'b'.
+             Error sintáctico en línea 6, columna 7: Se esperaba identificador antes de ';'.
+  RECHAZADO  pruebas/invalidos/08_mixto_lexico_y_sintactico.txt
+             Error léxico en línea 4, columna 8: carácter no válido '@'.
+             Error léxico en línea 8, columna 5: número mal formado '3.1.4'.
+             Error sintáctico en línea 5, columna 11: Se esperaba ')' antes de '{'.
+             Error sintáctico en línea 8, columna 13: Se esperaba identificador, número, '(' o '-' antes de ';'.
+             Error sintáctico en línea 9, columna 1: Se esperaba una sentencia o fin de archivo antes de '}'.
+
+Todas las pruebas pasaron.
