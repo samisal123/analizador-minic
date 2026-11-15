@@ -56,7 +56,7 @@ src/sintactico.c   analizador sintáctico descendente recursivo
 src/main.c         lectura del archivo y reporte de resultados
 src/tokens.h       tokens compartidos por ambos analizadores
 pruebas/           casos válidos, inválidos y sus resultados
-docs/              documento técnico (PDF)
+docs/              documento técnico (PDF), su fuente LaTeX y capturas de ejecución
 ```
 
 El lenguaje, la gramática, los conjuntos FIRST y FOLLOW, la tabla LL(1) y el manejo de errores están en [`docs/documento_tecnico.pdf`](docs/documento_tecnico.pdf).
