@@ -1,0 +1,47 @@
+Archivo: pruebas/invalidos/01_lexico_caracteres_invalidos.txt
+
+== Análisis léxico ==
+Error léxico en línea 4, columna 8: identificador con caracteres no válidos 'año'.
+Error léxico en línea 5, columna 7: carácter no válido '@'.
+Error léxico en línea 6, columna 7: carácter no válido '#'.
+Error léxico en línea 7, columna 5: carácter no válido '$'.
+
+Tokens reconocidos
+LÍNEA  COL  TOKEN           LEXEMA
+    4    1  INT             int
+    4    5  ID              x
+    4    6  COMMA           ,
+    4    8  ID              año
+    4   11  SEMICOLON       ;
+    5    1  ID              x
+    5    3  ASSIGN          =
+    5    5  NUMBER          5
+    5    9  NUMBER          3
+    5   10  SEMICOLON       ;
+    6    1  ID              x
+    6    3  ASSIGN          =
+    6    5  ID              x
+    6    9  NUMBER          2
+    6   10  SEMICOLON       ;
+    7    1  ID              x
+    7    3  ASSIGN          =
+    7    6  NUMBER          10
+    7    8  SEMICOLON       ;
+    8    1  FIN             $
+
+Secuencia de tokens por línea
+    4  INT ID COMMA ID SEMICOLON
+    5  ID ASSIGN NUMBER NUMBER SEMICOLON
+    6  ID ASSIGN ID NUMBER SEMICOLON
+    7  ID ASSIGN NUMBER SEMICOLON
+
+Tabla de símbolos
+IDENTIFICADOR         LÍNEA  APARICIONES
+x                         4            5
+
+== Análisis sintáctico ==
+Error sintáctico en línea 5, columna 9: Se esperaba ';' antes de '3'.
+Error sintáctico en línea 6, columna 9: Se esperaba ';' antes de '2'.
+
+== Resultado ==
+El programa NO es válido (errores léxicos: 4, errores sintácticos: 2).

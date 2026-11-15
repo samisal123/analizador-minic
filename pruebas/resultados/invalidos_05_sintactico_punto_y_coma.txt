@@ -1,0 +1,44 @@
+Archivo: pruebas/invalidos/05_sintactico_punto_y_coma.txt
+
+== Análisis léxico ==
+
+Tokens reconocidos
+LÍNEA  COL  TOKEN           LEXEMA
+    2    1  INT             int
+    2    5  ID              a
+    3    1  INT             int
+    3    5  ID              b
+    3    6  SEMICOLON       ;
+    4    1  ID              a
+    4    3  ASSIGN          =
+    4    5  NUMBER          1
+    5    1  ID              b
+    5    3  ASSIGN          =
+    5    5  NUMBER          2
+    5    6  SEMICOLON       ;
+    6    1  ID              b
+    6    3  ASSIGN          =
+    6    5  ID              a
+    6    7  PLUS            +
+    6    9  SEMICOLON       ;
+    7    1  FIN             $
+
+Secuencia de tokens por línea
+    2  INT ID
+    3  INT ID SEMICOLON
+    4  ID ASSIGN NUMBER
+    5  ID ASSIGN NUMBER SEMICOLON
+    6  ID ASSIGN ID PLUS SEMICOLON
+
+Tabla de símbolos
+IDENTIFICADOR         LÍNEA  APARICIONES
+a                         2            3
+b                         3            3
+
+== Análisis sintáctico ==
+Error sintáctico en línea 3, columna 1: Se esperaba ';' antes de 'int'.
+Error sintáctico en línea 5, columna 1: Se esperaba ';' antes de 'b'.
+Error sintáctico en línea 6, columna 9: Se esperaba identificador, número, '(' o '-' antes de ';'.
+
+== Resultado ==
+El programa NO es válido (errores léxicos: 0, errores sintácticos: 3).

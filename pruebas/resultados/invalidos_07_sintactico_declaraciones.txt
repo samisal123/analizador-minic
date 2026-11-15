@@ -1,0 +1,58 @@
+Archivo: pruebas/invalidos/07_sintactico_declaraciones.txt
+
+== Análisis léxico ==
+
+Tokens reconocidos
+LÍNEA  COL  TOKEN           LEXEMA
+    3    1  INT             int
+    3    5  SEMICOLON       ;
+    4    1  FLOAT           float
+    4    7  NUMBER          5
+    4    8  SEMICOLON       ;
+    5    1  INT             int
+    5    5  ID              a
+    5    7  ID              b
+    5    8  SEMICOLON       ;
+    6    1  INT             int
+    6    5  ID              c
+    6    6  COMMA           ,
+    6    7  SEMICOLON       ;
+    7    1  INT             int
+    7    5  ID              d
+    7    7  ASSIGN          =
+    7    9  SEMICOLON       ;
+    8    1  FLOAT           float
+    8    7  ID              e
+    8    9  ASSIGN          =
+    8   11  NUMBER          1.5
+    8   15  ID              f
+    8   16  SEMICOLON       ;
+    9    1  FIN             $
+
+Secuencia de tokens por línea
+    3  INT SEMICOLON
+    4  FLOAT NUMBER SEMICOLON
+    5  INT ID ID SEMICOLON
+    6  INT ID COMMA SEMICOLON
+    7  INT ID ASSIGN SEMICOLON
+    8  FLOAT ID ASSIGN NUMBER ID SEMICOLON
+
+Tabla de símbolos
+IDENTIFICADOR         LÍNEA  APARICIONES
+a                         5            1
+b                         5            1
+c                         6            1
+d                         7            1
+e                         8            1
+f                         8            1
+
+== Análisis sintáctico ==
+Error sintáctico en línea 3, columna 5: Se esperaba identificador antes de ';'.
+Error sintáctico en línea 4, columna 7: Se esperaba identificador antes de '5'.
+Error sintáctico en línea 5, columna 7: Se esperaba ';' antes de 'b'.
+Error sintáctico en línea 6, columna 7: Se esperaba identificador antes de ';'.
+Error sintáctico en línea 7, columna 9: Se esperaba identificador, número, '(' o '-' antes de ';'.
+Error sintáctico en línea 8, columna 15: Se esperaba ';' antes de 'f'.
+
+== Resultado ==
+El programa NO es válido (errores léxicos: 0, errores sintácticos: 6).

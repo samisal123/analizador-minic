@@ -1,0 +1,85 @@
+Archivo: pruebas/invalidos/06_sintactico_estructuras_control.txt
+
+== Análisis léxico ==
+
+Tokens reconocidos
+LÍNEA  COL  TOKEN           LEXEMA
+    3    1  INT             int
+    3    5  ID              x
+    3    6  SEMICOLON       ;
+    4    1  ID              x
+    4    3  ASSIGN          =
+    4    5  NUMBER          3
+    4    6  SEMICOLON       ;
+    5    1  IF              if
+    5    4  ID              x
+    5    6  GREATER         >
+    5    8  NUMBER          0
+    5   10  LBRACE          {
+    6    5  ID              x
+    6    7  ASSIGN          =
+    6    9  NUMBER          1
+    6   10  SEMICOLON       ;
+    7    1  RBRACE          }
+    8    1  WHILE           while
+    8    7  LPAREN          (
+    8    8  ID              x
+    8   10  GREATER         >
+    8   12  RPAREN          )
+    8   14  LBRACE          {
+    9    5  ID              x
+    9    7  ASSIGN          =
+    9    9  ID              x
+    9   11  MINUS           -
+    9   13  NUMBER          1
+    9   14  SEMICOLON       ;
+   10    1  RBRACE          }
+   11    1  ELSE            else
+   11    6  LBRACE          {
+   12    5  ID              x
+   12    7  ASSIGN          =
+   12    9  NUMBER          0
+   12   10  SEMICOLON       ;
+   13    1  RBRACE          }
+   14    1  WHILE           while
+   14    7  LPAREN          (
+   14    8  ID              x
+   14   10  LESS            <
+   14   12  NUMBER          10
+   14   14  RPAREN          )
+   14   16  LBRACE          {
+   15    5  ID              x
+   15    7  ASSIGN          =
+   15    9  ID              x
+   15   11  PLUS            +
+   15   13  NUMBER          1
+   15   14  SEMICOLON       ;
+   16    1  FIN             $
+
+Secuencia de tokens por línea
+    3  INT ID SEMICOLON
+    4  ID ASSIGN NUMBER SEMICOLON
+    5  IF ID GREATER NUMBER LBRACE
+    6  ID ASSIGN NUMBER SEMICOLON
+    7  RBRACE
+    8  WHILE LPAREN ID GREATER RPAREN LBRACE
+    9  ID ASSIGN ID MINUS NUMBER SEMICOLON
+   10  RBRACE
+   11  ELSE LBRACE
+   12  ID ASSIGN NUMBER SEMICOLON
+   13  RBRACE
+   14  WHILE LPAREN ID LESS NUMBER RPAREN LBRACE
+   15  ID ASSIGN ID PLUS NUMBER SEMICOLON
+
+Tabla de símbolos
+IDENTIFICADOR         LÍNEA  APARICIONES
+x                         3           11
+
+== Análisis sintáctico ==
+Error sintáctico en línea 5, columna 4: Se esperaba '(' antes de 'x'.
+Error sintáctico en línea 8, columna 12: Se esperaba identificador, número, '(' o '-' antes de ')'.
+Error sintáctico en línea 11, columna 1: Se esperaba una sentencia (declaración, asignación, if o while) antes de 'else'.
+Error sintáctico en línea 16, columna 1: Se esperaba '}' antes de fin de archivo.
+
+== Resultado ==
+El programa NO es válido (errores léxicos: 0, errores sintácticos: 4).

@@ -1,0 +1,143 @@
+Archivo: pruebas/validos/04_condicionales.txt
+
+== Análisis léxico ==
+
+Tokens reconocidos
+LÍNEA  COL  TOKEN           LEXEMA
+    2    1  INT             int
+    2    5  ID              n
+    2    6  COMMA           ,
+    2    8  ID              signo
+    2   13  COMMA           ,
+    2   15  ID              par
+    2   18  SEMICOLON       ;
+    3    1  ID              n
+    3    3  ASSIGN          =
+    3    5  NUMBER          15
+    3    7  SEMICOLON       ;
+    4    1  IF              if
+    4    4  LPAREN          (
+    4    5  ID              n
+    4    7  GREATER         >
+    4    9  NUMBER          0
+    4   10  RPAREN          )
+    4   12  LBRACE          {
+    5    5  ID              signo
+    5   11  ASSIGN          =
+    5   13  NUMBER          1
+    5   14  SEMICOLON       ;
+    6    1  RBRACE          }
+    6    3  ELSE            else
+    6    8  IF              if
+    6   11  LPAREN          (
+    6   12  ID              n
+    6   14  LESS            <
+    6   16  NUMBER          0
+    6   17  RPAREN          )
+    6   19  LBRACE          {
+    7    5  ID              signo
+    7   11  ASSIGN          =
+    7   13  MINUS           -
+    7   14  NUMBER          1
+    7   15  SEMICOLON       ;
+    8    1  RBRACE          }
+    8    3  ELSE            else
+    8    8  LBRACE          {
+    9    5  ID              signo
+    9   11  ASSIGN          =
+    9   13  NUMBER          0
+    9   14  SEMICOLON       ;
+   10    1  RBRACE          }
+   11    1  IF              if
+   11    4  LPAREN          (
+   11    5  ID              n
+   11    7  MINUS           -
+   11    9  LPAREN          (
+   11   10  ID              n
+   11   12  DIVIDE          /
+   11   14  NUMBER          2
+   11   15  RPAREN          )
+   11   17  TIMES           *
+   11   19  NUMBER          2
+   11   21  EQUAL           ==
+   11   24  NUMBER          0
+   11   25  RPAREN          )
+   11   27  LBRACE          {
+   12    5  ID              par
+   12    9  ASSIGN          =
+   12   11  NUMBER          1
+   12   12  SEMICOLON       ;
+   13    1  RBRACE          }
+   13    3  ELSE            else
+   13    8  LBRACE          {
+   14    5  ID              par
+   14    9  ASSIGN          =
+   14   11  NUMBER          0
+   14   12  SEMICOLON       ;
+   15    1  RBRACE          }
+   16    1  IF              if
+   16    4  LPAREN          (
+   16    5  ID              n
+   16    7  GREATER_EQUAL   >=
+   16   10  NUMBER          10
+   16   12  RPAREN          )
+   16   14  LBRACE          {
+   17    5  IF              if
+   17    8  LPAREN          (
+   17    9  ID              n
+   17   11  LESS_EQUAL      <=
+   17   14  NUMBER          20
+   17   16  RPAREN          )
+   17   18  LBRACE          {
+   18    9  ID              n
+   18   11  ASSIGN          =
+   18   13  ID              n
+   18   15  TIMES           *
+   18   17  NUMBER          2
+   18   18  SEMICOLON       ;
+   19    5  RBRACE          }
+   20    1  RBRACE          }
+   21    1  IF              if
+   21    4  LPAREN          (
+   21    5  ID              n
+   21    7  NOT_EQUAL       !=
+   21   10  NUMBER          0
+   21   11  RPAREN          )
+   21   13  LBRACE          {
+   22    1  RBRACE          }
+   23    1  FIN             $
+
+Secuencia de tokens por línea
+    2  INT ID COMMA ID COMMA ID SEMICOLON
+    3  ID ASSIGN NUMBER SEMICOLON
+    4  IF LPAREN ID GREATER NUMBER RPAREN LBRACE
+    5  ID ASSIGN NUMBER SEMICOLON
+    6  RBRACE ELSE IF LPAREN ID LESS NUMBER RPAREN LBRACE
+    7  ID ASSIGN MINUS NUMBER SEMICOLON
+    8  RBRACE ELSE LBRACE
+    9  ID ASSIGN NUMBER SEMICOLON
+   10  RBRACE
+   11  IF LPAREN ID MINUS LPAREN ID DIVIDE NUMBER RPAREN TIMES NUMBER EQUAL NUMBER RPAREN LBRACE
+   12  ID ASSIGN NUMBER SEMICOLON
+   13  RBRACE ELSE LBRACE
+   14  ID ASSIGN NUMBER SEMICOLON
+   15  RBRACE
+   16  IF LPAREN ID GREATER_EQUAL NUMBER RPAREN LBRACE
+   17  IF LPAREN ID LESS_EQUAL NUMBER RPAREN LBRACE
+   18  ID ASSIGN ID TIMES NUMBER SEMICOLON
+   19  RBRACE
+   20  RBRACE
+   21  IF LPAREN ID NOT_EQUAL NUMBER RPAREN LBRACE
+   22  RBRACE
+
+Tabla de símbolos
+IDENTIFICADOR         LÍNEA  APARICIONES
+n                         2           11
+signo                     2            4
+par                       2            3
+
+== Análisis sintáctico ==
+Sin errores sintácticos.
+
+== Resultado ==
+El programa es léxica y sintácticamente válido.

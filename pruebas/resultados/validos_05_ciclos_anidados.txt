@@ -1,0 +1,97 @@
+Archivo: pruebas/validos/05_ciclos_anidados.txt
+
+== Análisis léxico ==
+
+Tokens reconocidos
+LÍNEA  COL  TOKEN           LEXEMA
+    2    1  INT             int
+    2    5  ID              i
+    2    6  COMMA           ,
+    2    8  ID              j
+    2    9  COMMA           ,
+    2   11  ID              suma
+    2   15  SEMICOLON       ;
+    3    1  ID              suma
+    3    6  ASSIGN          =
+    3    8  NUMBER          0
+    3    9  SEMICOLON       ;
+    4    1  ID              i
+    4    3  ASSIGN          =
+    4    5  NUMBER          1
+    4    6  SEMICOLON       ;
+    5    1  WHILE           while
+    5    7  LPAREN          (
+    5    8  ID              i
+    5   10  LESS_EQUAL      <=
+    5   13  NUMBER          5
+    5   14  RPAREN          )
+    5   16  LBRACE          {
+    6    5  ID              j
+    6    7  ASSIGN          =
+    6    9  NUMBER          1
+    6   10  SEMICOLON       ;
+    7    5  WHILE           while
+    7   11  LPAREN          (
+    7   12  ID              j
+    7   14  LESS_EQUAL      <=
+    7   17  ID              i
+    7   18  RPAREN          )
+    7   20  LBRACE          {
+    8    9  IF              if
+    8   12  LPAREN          (
+    8   13  ID              j
+    8   15  EQUAL           ==
+    8   18  ID              i
+    8   19  RPAREN          )
+    8   21  LBRACE          {
+    9   13  ID              suma
+    9   18  ASSIGN          =
+    9   20  ID              suma
+    9   25  PLUS            +
+    9   27  ID              i
+    9   29  TIMES           *
+    9   31  ID              j
+    9   32  SEMICOLON       ;
+   10    9  RBRACE          }
+   11    9  ID              j
+   11   11  ASSIGN          =
+   11   13  ID              j
+   11   15  PLUS            +
+   11   17  NUMBER          1
+   11   18  SEMICOLON       ;
+   12    5  RBRACE          }
+   13    5  ID              i
+   13    7  ASSIGN          =
+   13    9  ID              i
+   13   11  PLUS            +
+   13   13  NUMBER          1
+   13   14  SEMICOLON       ;
+   14    1  RBRACE          }
+   15    1  FIN             $
+
+Secuencia de tokens por línea
+    2  INT ID COMMA ID COMMA ID SEMICOLON
+    3  ID ASSIGN NUMBER SEMICOLON
+    4  ID ASSIGN NUMBER SEMICOLON
+    5  WHILE LPAREN ID LESS_EQUAL NUMBER RPAREN LBRACE
+    6  ID ASSIGN NUMBER SEMICOLON
+    7  WHILE LPAREN ID LESS_EQUAL ID RPAREN LBRACE
+    8  IF LPAREN ID EQUAL ID RPAREN LBRACE
+    9  ID ASSIGN ID PLUS ID TIMES ID SEMICOLON
+   10  RBRACE
+   11  ID ASSIGN ID PLUS NUMBER SEMICOLON
+   12  RBRACE
+   13  ID ASSIGN ID PLUS NUMBER SEMICOLON
+   14  RBRACE
+
+Tabla de símbolos
+IDENTIFICADOR         LÍNEA  APARICIONES
+i                         2            8
+j                         2            7
+suma                      2            4
+
+== Análisis sintáctico ==
+Sin errores sintácticos.
+
+== Resultado ==
+El programa es léxica y sintácticamente válido.

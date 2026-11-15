@@ -1,0 +1,29 @@
+Archivo: pruebas/invalidos/03_lexico_comentario_sin_cerrar.txt
+
+== Análisis léxico ==
+Error léxico en línea 4, columna 1: comentario de bloque sin cerrar.
+
+Tokens reconocidos
+LÍNEA  COL  TOKEN           LEXEMA
+    2    1  INT             int
+    2    5  ID              x
+    2    6  SEMICOLON       ;
+    3    1  ID              x
+    3    3  ASSIGN          =
+    3    5  NUMBER          1
+    3    6  SEMICOLON       ;
+    6    1  FIN             $
+
+Secuencia de tokens por línea
+    2  INT ID SEMICOLON
+    3  ID ASSIGN NUMBER SEMICOLON
+
+Tabla de símbolos
+IDENTIFICADOR         LÍNEA  APARICIONES
+x                         2            2
+
+== Análisis sintáctico ==
+Sin errores sintácticos.
+
+== Resultado ==
+El programa NO es válido (errores léxicos: 1, errores sintácticos: 0).

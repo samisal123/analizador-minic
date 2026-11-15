@@ -32,6 +32,12 @@ LÍNEA  COL  TOKEN           LEXEMA
     5    7  SEMICOLON       ;
     6    1  FIN             $
 
+Secuencia de tokens por línea
+    2  INT ID COMMA ID SEMICOLON
+    3  ID ASSIGN LPAREN NUMBER PLUS NUMBER SEMICOLON
+    4  ID ASSIGN LPAREN ID TIMES NUMBER RPAREN RPAREN SEMICOLON
+    5  ID ASSIGN LPAREN RPAREN SEMICOLON
+
 Tabla de símbolos
 IDENTIFICADOR         LÍNEA  APARICIONES
 x                         2            3

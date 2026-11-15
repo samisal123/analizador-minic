@@ -1,0 +1,124 @@
+Archivo: pruebas/validos/06_programa_completo.txt
+
+== Análisis léxico ==
+
+Tokens reconocidos
+LÍNEA  COL  TOKEN           LEXEMA
+    2    1  INT             int
+    2    5  ID              a
+    2    6  COMMA           ,
+    2    8  ID              b
+    2    9  COMMA           ,
+    2   11  ID              mcd
+    2   14  SEMICOLON       ;
+    3    1  INT             int
+    3    5  ID              n
+    3    6  COMMA           ,
+    3    8  ID              fact
+    3   12  SEMICOLON       ;
+    4    1  ID              a
+    4    3  ASSIGN          =
+    4    5  NUMBER          48
+    4    7  SEMICOLON       ;
+    5    1  ID              b
+    5    3  ASSIGN          =
+    5    5  NUMBER          18
+    5    7  SEMICOLON       ;
+    6    1  WHILE           while
+    6    7  LPAREN          (
+    6    8  ID              a
+    6   10  NOT_EQUAL       !=
+    6   13  ID              b
+    6   14  RPAREN          )
+    6   16  LBRACE          {
+    7    5  IF              if
+    7    8  LPAREN          (
+    7    9  ID              a
+    7   11  GREATER         >
+    7   13  ID              b
+    7   14  RPAREN          )
+    7   16  LBRACE          {
+    8    9  ID              a
+    8   11  ASSIGN          =
+    8   13  ID              a
+    8   15  MINUS           -
+    8   17  ID              b
+    8   18  SEMICOLON       ;
+    9    5  RBRACE          }
+    9    7  ELSE            else
+    9   12  LBRACE          {
+   10    9  ID              b
+   10   11  ASSIGN          =
+   10   13  ID              b
+   10   15  MINUS           -
+   10   17  ID              a
+   10   18  SEMICOLON       ;
+   11    5  RBRACE          }
+   12    1  RBRACE          }
+   13    1  ID              mcd
+   13    5  ASSIGN          =
+   13    7  ID              a
+   13    8  SEMICOLON       ;
+   15    1  ID              n
+   15    3  ASSIGN          =
+   15    5  NUMBER          5
+   15    6  SEMICOLON       ;
+   16    1  ID              fact
+   16    6  ASSIGN          =
+   16    8  NUMBER          1
+   16    9  SEMICOLON       ;
+   17    1  WHILE           while
+   17    7  LPAREN          (
+   17    8  ID              n
+   17   10  GREATER         >
+   17   12  NUMBER          1
+   17   13  RPAREN          )
+   17   15  LBRACE          {
+   18    5  ID              fact
+   18   10  ASSIGN          =
+   18   12  ID              fact
+   18   17  TIMES           *
+   18   19  ID              n
+   18   20  SEMICOLON       ;
+   19    5  ID              n
+   19    7  ASSIGN          =
+   19    9  ID              n
+   19   11  MINUS           -
+   19   13  NUMBER          1
+   19   14  SEMICOLON       ;
+   20    1  RBRACE          }
+   21    1  FIN             $
+
+Secuencia de tokens por línea
+    2  INT ID COMMA ID COMMA ID SEMICOLON
+    3  INT ID COMMA ID SEMICOLON
+    4  ID ASSIGN NUMBER SEMICOLON
+    5  ID ASSIGN NUMBER SEMICOLON
+    6  WHILE LPAREN ID NOT_EQUAL ID RPAREN LBRACE
+    7  IF LPAREN ID GREATER ID RPAREN LBRACE
+    8  ID ASSIGN ID MINUS ID SEMICOLON
+    9  RBRACE ELSE LBRACE
+   10  ID ASSIGN ID MINUS ID SEMICOLON
+   11  RBRACE
+   12  RBRACE
+   13  ID ASSIGN ID SEMICOLON
+   15  ID ASSIGN NUMBER SEMICOLON
+   16  ID ASSIGN NUMBER SEMICOLON
+   17  WHILE LPAREN ID GREATER NUMBER RPAREN LBRACE
+   18  ID ASSIGN ID TIMES ID SEMICOLON
+   19  ID ASSIGN ID MINUS NUMBER SEMICOLON
+   20  RBRACE
+
+Tabla de símbolos
+IDENTIFICADOR         LÍNEA  APARICIONES
+a                         2            8
+b                         2            7
+mcd                       2            2
+n                         3            6
+fact                      3            4
+
+== Análisis sintáctico ==
+Sin errores sintácticos.
+
+== Resultado ==
+El programa es léxica y sintácticamente válido.

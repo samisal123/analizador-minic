@@ -1,0 +1,124 @@
+Archivo: pruebas/validos/03_expresiones_aritmeticas.txt
+
+== Análisis léxico ==
+
+Tokens reconocidos
+LÍNEA  COL  TOKEN           LEXEMA
+    2    1  INT             int
+    2    5  ID              a
+    2    6  COMMA           ,
+    2    8  ID              b
+    2    9  COMMA           ,
+    2   11  ID              c
+    2   12  COMMA           ,
+    2   14  ID              r
+    2   15  SEMICOLON       ;
+    3    1  FLOAT           float
+    3    7  ID              x
+    3    8  SEMICOLON       ;
+    4    1  ID              a
+    4    3  ASSIGN          =
+    4    5  NUMBER          7
+    4    6  SEMICOLON       ;
+    5    1  ID              b
+    5    3  ASSIGN          =
+    5    5  MINUS           -
+    5    6  NUMBER          3
+    5    7  SEMICOLON       ;
+    6    1  ID              c
+    6    3  ASSIGN          =
+    6    5  ID              a
+    6    7  MINUS           -
+    6    9  ID              b
+    6   11  MINUS           -
+    6   13  NUMBER          1
+    6   14  SEMICOLON       ;
+    7    1  ID              r
+    7    3  ASSIGN          =
+    7    5  ID              a
+    7    7  PLUS            +
+    7    9  ID              b
+    7   11  TIMES           *
+    7   13  ID              c
+    7   15  MINUS           -
+    7   17  NUMBER          4
+    7   19  DIVIDE          /
+    7   21  NUMBER          2
+    7   22  SEMICOLON       ;
+    8    1  ID              r
+    8    3  ASSIGN          =
+    8    5  LPAREN          (
+    8    6  ID              a
+    8    8  PLUS            +
+    8   10  ID              b
+    8   11  RPAREN          )
+    8   13  TIMES           *
+    8   15  LPAREN          (
+    8   16  ID              c
+    8   18  MINUS           -
+    8   20  LPAREN          (
+    8   21  ID              a
+    8   23  DIVIDE          /
+    8   25  NUMBER          2
+    8   26  RPAREN          )
+    8   27  RPAREN          )
+    8   28  SEMICOLON       ;
+    9    1  ID              r
+    9    3  ASSIGN          =
+    9    5  MINUS           -
+    9    6  LPAREN          (
+    9    7  ID              a
+    9    9  PLUS            +
+    9   11  ID              b
+    9   12  RPAREN          )
+    9   14  TIMES           *
+    9   16  MINUS           -
+    9   17  ID              c
+    9   18  SEMICOLON       ;
+   10    1  ID              x
+   10    3  ASSIGN          =
+   10    5  NUMBER          3.1416
+   10   12  TIMES           *
+   10   14  NUMBER          2.0
+   10   18  TIMES           *
+   10   20  NUMBER          10
+   10   22  SEMICOLON       ;
+   11    1  ID              x
+   11    3  ASSIGN          =
+   11    5  LPAREN          (
+   11    6  LPAREN          (
+   11    7  LPAREN          (
+   11    8  LPAREN          (
+   11    9  ID              x
+   11   10  RPAREN          )
+   11   11  RPAREN          )
+   11   12  RPAREN          )
+   11   13  RPAREN          )
+   11   14  SEMICOLON       ;
+   12    1  FIN             $
+
+Secuencia de tokens por línea
+    2  INT ID COMMA ID COMMA ID COMMA ID SEMICOLON
+    3  FLOAT ID SEMICOLON
+    4  ID ASSIGN NUMBER SEMICOLON
+    5  ID ASSIGN MINUS NUMBER SEMICOLON
+    6  ID ASSIGN ID MINUS ID MINUS NUMBER SEMICOLON
+    7  ID ASSIGN ID PLUS ID TIMES ID MINUS NUMBER DIVIDE NUMBER SEMICOLON
+    8  ID ASSIGN LPAREN ID PLUS ID RPAREN TIMES LPAREN ID MINUS LPAREN ID DIVIDE NUMBER RPAREN RPAREN SEMICOLON
+    9  ID ASSIGN MINUS LPAREN ID PLUS ID RPAREN TIMES MINUS ID SEMICOLON
+   10  ID ASSIGN NUMBER TIMES NUMBER TIMES NUMBER SEMICOLON
+   11  ID ASSIGN LPAREN LPAREN LPAREN LPAREN ID RPAREN RPAREN RPAREN RPAREN SEMICOLON
+
+Tabla de símbolos
+IDENTIFICADOR         LÍNEA  APARICIONES
+a                         2            7
+b                         2            6
+c                         2            5
+r                         2            4
+x                         3            4
+
+== Análisis sintáctico ==
+Sin errores sintácticos.
+
+== Resultado ==
+El programa es léxica y sintácticamente válido.

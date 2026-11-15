@@ -1,0 +1,44 @@
+Archivo: pruebas/invalidos/02_lexico_literales_mal_formados.txt
+
+== Análisis léxico ==
+Error léxico en línea 4, columna 6: número mal formado '3.14.15'.
+Error léxico en línea 5, columna 5: número mal formado '2.'.
+Error léxico en línea 6, columna 1: identificador mal formado '2radio'.
+
+Tokens reconocidos
+LÍNEA  COL  TOKEN           LEXEMA
+    3    1  FLOAT           float
+    3    7  ID              pi
+    3    9  COMMA           ,
+    3   11  ID              r
+    3   12  SEMICOLON       ;
+    4    1  ID              pi
+    4    4  ASSIGN          =
+    4    6  NUMBER          3.14.15
+    4   13  SEMICOLON       ;
+    5    1  ID              r
+    5    3  ASSIGN          =
+    5    5  NUMBER          2.
+    5    7  SEMICOLON       ;
+    6    1  ID              2radio
+    6    8  ASSIGN          =
+    6   10  NUMBER          10
+    6   12  SEMICOLON       ;
+    7    1  FIN             $
+
+Secuencia de tokens por línea
+    3  FLOAT ID COMMA ID SEMICOLON
+    4  ID ASSIGN NUMBER SEMICOLON
+    5  ID ASSIGN NUMBER SEMICOLON
+    6  ID ASSIGN NUMBER SEMICOLON
+
+Tabla de símbolos
+IDENTIFICADOR         LÍNEA  APARICIONES
+pi                        3            2
+r                         3            2
+
+== Análisis sintáctico ==
+Sin errores sintácticos.
+
+== Resultado ==
+El programa NO es válido (errores léxicos: 3, errores sintácticos: 0).
