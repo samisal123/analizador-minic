@@ -84,8 +84,10 @@ static void sincronizar(int era_if)
         if (t == RBRACE && nivel == 0) break;      /* lo consume el bloque que contiene al error */
         avanzar();
         if (t == LBRACE) nivel++;
-        else if (t == RBRACE && --nivel == 0 && !(era_if && lookahead->tipo == ELSE)) break;
-        else if (t == SEMICOLON && nivel == 0) break;
+        else if (t == RBRACE && --nivel == 0 && !(era_if && lookahead->tipo == ELSE))
+            break;
+        else if (t == SEMICOLON && nivel == 0)
+            break;
     }
     panico = 0;
 }

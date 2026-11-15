@@ -23,6 +23,18 @@ int main(int argc, char *argv[])
     for (int i = 0; i < n; i++)
         printf("%5d  %3d  %-14s  %s\n", tokens[i].linea, tokens[i].columna,
                nombre_token(tokens[i].tipo), tokens[i].lexema);
+
+    /* Misma secuencia agrupada por línea, en el formato del enunciado. FIN no se muestra. */
+    printf("\nSecuencia de tokens por línea\n");
+    for (int i = 0; i < n - 1; i++) {
+        if (i == 0 || tokens[i].linea != tokens[i - 1].linea)
+            printf("%s%5d  ", i ? "\n" : "", tokens[i].linea);
+        else
+            printf(" ");
+        printf("%s", nombre_token(tokens[i].tipo));
+    }
+    if (n > 1) printf("\n");
+
     imprimir_tabla_simbolos();
 
     printf("\n== Análisis sintáctico ==\n");
