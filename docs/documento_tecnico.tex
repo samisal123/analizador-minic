@@ -1,0 +1,864 @@
+% ===========================================================================
+% PROYECTO FINAL · Compiladores, FI UNAM
+% Diseño e implementación de un analizador léxico y sintáctico para MiniC
+% ===========================================================================
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[spanish,es-nodecimaldot,es-noshorthands,es-tabla]{babel}
+\usepackage{microtype}
+\usepackage{textcomp}
+
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage[table]{xcolor}
+\usepackage{enumitem}
+\usepackage[most]{tcolorbox}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage{needspace}
+\usepackage{amsmath,amssymb}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning,arrows.meta}
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+
+% -- Datos del curso y del trabajo -------------------------------------------
+\newcommand{\Materia}{Compiladores}
+\newcommand{\Semestre}{2027-1}
+\newcommand{\Profesor}{M.I. Manuel Enrique Castañeda Castañeda}
+\newcommand{\Grupo}{02}
+\newcommand{\FechaEntrega}{14 de noviembre de 2026}
+\newcommand{\TituloTrabajo}{Proyecto final}
+\newcommand{\SubtituloTrabajo}{Analizador léxico y sintáctico para MiniC}
+% ---------------------------------------------------------------------------
+
+\definecolor{grisclaro}{gray}{0.955}
+\definecolor{grismedio}{gray}{0.88}
+\definecolor{grisborde}{gray}{0.70}
+
+\geometry{a4paper, top=3.0cm, bottom=2.6cm, left=2.8cm, right=2.8cm,
+headheight=15pt, headsep=0.7cm, footskip=1.1cm}
+\setstretch{1.15}
+\setlength{\parskip}{0.45em}
+\setlength{\parindent}{0pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\footnotesize\textbf{\Materia}\ \textbar\ Grupo \Grupo}
+\fancyhead[R]{\footnotesize\TituloTrabajo}
+\fancyfoot[C]{\footnotesize\color{black!60}\thepage}
+
+\titleformat{\section}
+{\Large\bfseries\scshape}{\thesection}{0.6em}{}[{\titlerule[1.0pt]}]
+\titlespacing*{\section}{0pt}{1.6em}{0.9em}
+
+\titleformat{\subsection}
+{\large\bfseries}{\thesubsection}{0.6em}{}
+\titlespacing*{\subsection}{0pt}{1.2em}{0.5em}
+
+\newcommand{\cmd}[1]{\texttt{\small #1}}
+\newcommand{\nt}[1]{\textit{#1}}
+\newcommand{\eps}{$\varepsilon$}
+
+\newtcolorbox{apartado}[1]{
+enhanced, breakable,
+colback=white, colframe=black,
+boxrule=0.6pt, arc=0pt,
+left=9pt, right=9pt, top=7pt, bottom=7pt,
+fonttitle=\bfseries\small, coltitle=white, colbacktitle=black,
+attach boxed title to top left={xshift=8pt, yshift=-\tcboxedtitleheight/2},
+boxed title style={arc=1pt, boxrule=0pt},
+title={#1},
+top=12pt
+}
+
+\newtcolorbox{respuesta}{
+enhanced, breakable,
+colback=grisclaro, colframe=black,
+boxrule=0pt, leftrule=2.5pt, arc=0pt,
+left=10pt, right=6pt, top=6pt, bottom=6pt
+}
+
+\lstdefinestyle{codigo}{
+basicstyle=\ttfamily\footnotesize,
+columns=fullflexible, keepspaces=true,
+backgroundcolor=\color{grisclaro},
+frame=leftline, framerule=2.5pt, rulecolor=\color{black},
+xleftmargin=8pt, framexleftmargin=6pt, framesep=6pt,
+aboveskip=0.8em, belowskip=0.6em,
+keywordstyle=\bfseries, commentstyle=\color{black!60},
+showstringspaces=false, breaklines=true,
+literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1
+         {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+         {→}{{$\rightarrow$}}1 {ε}{{$\varepsilon$}}1
+}
+\lstset{style=codigo}
+
+% Los logos se toman de la carpeta IMAGENES (si no existen, se deja el espacio)
+\newcommand{\logo}[1]{\IfFileExists{#1}{\includegraphics[height=2.9cm]{#1}}{\rule{0pt}{2.9cm}}}
+
+% Abreviaturas para los conjuntos FIRST, FOLLOW y la tabla LL(1)
+\newcommand{\Ini}{\mathcal{I}}
+\newcommand{\Rel}{\mathcal{R}}
+\newcommand{\Exp}{\mathcal{X}}
+
+\begin{document}
+\sloppy
+
+% ===========================================================================
+% CARATULA
+% ===========================================================================
+\begin{titlepage}
+\thispagestyle{empty}
+\newgeometry{top=2.0cm,bottom=1.8cm,left=2.4cm,right=2.4cm}
+\centering
+\setlength{\parskip}{0pt}
+\setstretch{1.0}
+
+\begin{minipage}{0.48\textwidth}
+\raggedright
+\logo{IMAGENES/fi.png}
+\end{minipage}
+\begin{minipage}{0.48\textwidth}
+\raggedleft
+\logo{IMAGENES/unam.png}
+\end{minipage}
+
+\vspace{1.1cm}
+{\Large \textbf{Universidad Nacional Autónoma de México}}\\[4pt]
+{\large Facultad de Ingeniería}\\[2pt]
+{\normalsize \Materia}
+
+\vspace{1.1cm}
+{\rule{\textwidth}{1.4pt}}\\[2.5pt]
+{\rule{\textwidth}{0.5pt}}
+
+\vspace{0.8cm}
+{\Huge \textbf{\TituloTrabajo}}\\[12pt]
+{\LARGE \SubtituloTrabajo}
+\vspace{0.8cm}
+
+{\rule{\textwidth}{0.5pt}}\\[2.5pt]
+{\rule{\textwidth}{1.4pt}}
+
+\vspace{1.3cm}
+
+\begin{tabular}{r@{\hspace{10pt}}l}
+\textbf{Semestre:} & \Semestre \\
+\textbf{Profesor:} & \Profesor \\
+\textbf{Grupo:} & \Grupo \\
+\textbf{Fecha de entrega:} & \FechaEntrega \\
+\end{tabular}
+
+\vspace{1.1cm}
+
+{\large \textbf{\scshape Integrantes}}\\[8pt]
+{\large Basilio Illescas Andrés}\\[4pt]
+{\large Cruz Macedo Samuel Santiago}\\[4pt]
+{\large Fernández Hernandez Jesús Jafet}
+
+\vfill
+\restoregeometry
+\end{titlepage}
+
+\newpage
+\setcounter{page}{1}
+
+% ===========================================================================
+\section*{Objetivo y alcance}
+
+\noindent
+El programa recibe un archivo de texto con código en MiniC, un subconjunto de C, y realiza su
+análisis léxico y sintáctico. El analizador léxico, generado con Flex, convierte el texto en una
+secuencia de tokens con su línea y columna. El analizador sintáctico es descendente recursivo
+LL(1), está escrito en C y recibe esa secuencia como único insumo para comprobar que el programa
+respeta la gramática. Los errores de ambas fases se reportan con su ubicación y el análisis
+continúa hasta el final del archivo. Al terminar, el programa indica si la entrada es válida.
+
+El análisis semántico y las fases de síntesis quedan fuera del alcance, como establece la
+asignación.
+
+\vspace{0.2em}
+\noindent\textbf{Herramientas:} C (C99), Flex 2.6.4 y GNU Make.\\
+\noindent\textbf{Repositorio:} \url{https://github.com/samisal123/analizador-minic}
+
+% ===========================================================================
+\section*{Lenguaje MiniC}
+
+\begin{itemize}[leftmargin=1.1cm,itemsep=0.25em]
+\item El alfabeto lo forman las letras ASCII, los dígitos, el guion bajo y los símbolos de la
+tabla~\ref{tab:tokens}. Cualquier otro carácter, incluidas las vocales acentuadas y la \cmd{ñ},
+es un error léxico.
+\item Se distinguen mayúsculas y minúsculas: \cmd{while} es palabra reservada y \cmd{While}, un
+identificador.
+\item Espacios, tabuladores y saltos de línea solo separan tokens. Hay comentarios de línea
+(\cmd{//}) y de bloque (\cmd{/* */}); los de bloque pueden ocupar varias líneas y no se anidan.
+\end{itemize}
+
+\renewcommand{\arraystretch}{1.2}
+\begin{table}[!htbp]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.6cm}X@{}}
+\toprule
+\textbf{Elemento} & \textbf{Forma} \\
+\midrule
+Palabras reservadas & \cmd{int}, \cmd{float}, \cmd{if}, \cmd{else}, \cmd{while} \\
+Identificadores & Letra o \cmd{\_} seguida de letras, dígitos o \cmd{\_}: \cmd{x}, \cmd{\_total1} \\
+Constantes & Enteras (\cmd{42}) y decimales con parte entera y fraccionaria (\cmd{3.14}) \\
+Operadores & \cmd{=}; \cmd{+ - * /}; \cmd{< > <= >= == !=} \\
+Delimitadores & \cmd{; , ( ) \{ \}} \\
+\midrule
+Declaración & \cmd{int a, b = 2;} \quad \cmd{float r = 0.5;} \\
+Asignación & \cmd{id = expresión;} \\
+Expresión & Operandos, paréntesis y menos unario con \cmd{+ - * /}. Precedencia: menos unario,
+después \cmd{* /} y al final \cmd{+ -}; los binarios asocian por la izquierda \\
+Condicional & \cmd{if (cond) \{ \dots\ \}} con \cmd{else \{ \dots\ \}} o \cmd{else if} opcional \\
+Ciclo & \cmd{while (cond) \{ \dots\ \}} \\
+\bottomrule
+\end{tabularx}
+\caption{Elementos léxicos y construcciones de MiniC.}
+\label{tab:lenguaje}
+\end{table}
+
+\noindent
+Una condición compara dos expresiones con un operador relacional. El cuerpo de \cmd{if},
+\cmd{else} y \cmd{while} siempre va entre llaves y puede estar vacío.
+
+% ===========================================================================
+\section*{Tokens y expresiones regulares}
+
+\noindent
+Los nombres de token son los de la asignación. En la gramática cada token aparece como su
+lexema, salvo \cmd{ID} (\cmd{id}), \cmd{NUMBER} (\cmd{num}) y \cmd{FIN} (\cmd{\$}).
+
+\begin{table}[!htbp]
+\centering\small
+\begin{tabular}{@{}>{\ttfamily}l l @{\hspace{1.4cm}} >{\ttfamily}l l@{}}
+\toprule
+\normalfont\textbf{Token} & \textbf{Patrón} & \normalfont\textbf{Token} & \textbf{Patrón} \\
+\midrule
+INT & \cmd{int} & LESS & \cmd{<} \\
+FLOAT & \cmd{float} & GREATER & \cmd{>} \\
+IF & \cmd{if} & LESS\_EQUAL & \cmd{<=} \\
+ELSE & \cmd{else} & GREATER\_EQUAL & \cmd{>=} \\
+WHILE & \cmd{while} & EQUAL & \cmd{==} \\
+ID & \cmd{\{ID\}} & NOT\_EQUAL & \cmd{!=} \\
+NUMBER & \cmd{\{NUM\}} & LPAREN, RPAREN & \cmd{(} \ \cmd{)} \\
+ASSIGN & \cmd{=} & LBRACE, RBRACE & \cmd{\{} \ \cmd{\}} \\
+PLUS, MINUS & \cmd{+} \ \cmd{-} & SEMICOLON & \cmd{;} \\
+TIMES, DIVIDE & \cmd{*} \ \cmd{/} & COMMA & \cmd{,} \\
+FIN & fin de archivo & & \\
+\bottomrule
+\end{tabular}
+\caption{Tabla de tokens.}
+\label{tab:tokens}
+\end{table}
+
+\noindent\textbf{Definiciones regulares} (sección de definiciones de \cmd{src/lexico.l}):
+
+\begin{lstlisting}
+DIGITO   [0-9]
+LETRA    [A-Za-z_]
+UTF8     [\xC2-\xF4][\x80-\xBF]+
+ID       {LETRA}({LETRA}|{DIGITO})*
+NUM      {DIGITO}+("."{DIGITO}+)?
+NUM_MAL  {DIGITO}+("."{DIGITO}*)+
+ID_MAL   {NUM}{LETRA}({LETRA}|{DIGITO})*
+PALABRA  ({LETRA}|{DIGITO}|{UTF8})
+ID_UTF8  {LETRA}{PALABRA}*{UTF8}{PALABRA}*|{UTF8}+{LETRA}{PALABRA}*
+\end{lstlisting}
+
+\noindent
+\cmd{ID} y \cmd{NUM} describen los lexemas válidos. \cmd{NUM\_MAL}, \cmd{ID\_MAL} e
+\cmd{ID\_UTF8} reconocen completos los lexemas mal formados (\cmd{3.14.5}, \cmd{2abc},
+\cmd{año}) para reportarlos como un solo error. \cmd{UTF8} es un carácter no ASCII codificado en
+UTF-8.
+
+\begin{table}[!htbp]
+\centering\small
+\begin{tabular}{@{}>{\ttfamily}l l@{}}
+\toprule
+\normalfont\textbf{Patrón, en orden} & \textbf{Acción} \\
+\midrule
+{}[ \textbackslash t\textbackslash r\textbackslash n]+ \quad "//".* & Descartar \\
+"/*" & Entrar al estado exclusivo \cmd{COMENTARIO} \\
+"int" "float" "if" "else" "while" & Palabra reservada \\
+\{ID\} \quad \{NUM\} & \cmd{ID}, \cmd{NUMBER} \\
+\{NUM\_MAL\} \quad \{ID\_MAL\} \quad \{ID\_UTF8\} & Error léxico; se entrega \cmd{NUMBER} o \cmd{ID} \\
+"<=" ">=" "==" "!=" & Operador relacional de dos caracteres \\
+"<" ">" "=" "+" "-" "*" "/" & Operador de un carácter \\
+"(" ")" "\{" "\}" ";" "," & Delimitador \\
+\{UTF8\}|. & Error léxico: carácter no válido \\
+\bottomrule
+\end{tabular}
+\caption{Reglas de la especificación Flex.}
+\end{table}
+
+\noindent\textbf{Resolución de conflictos.} Flex elige la coincidencia más larga y, a igual
+longitud, la regla que aparece primero. El orden de las reglas aprovecha ambos criterios:
+
+\begin{itemize}[leftmargin=1.1cm,itemsep=0.2em]
+\item \cmd{if} coincide con \cmd{"if"} y con \cmd{\{ID\}} con la misma longitud y gana la palabra
+reservada por estar antes; en \cmd{ifx} gana \cmd{\{ID\}} por ser más larga.
+\item \cmd{<=}, \cmd{//} y \cmd{/*} son más largos que \cmd{<} y \cmd{/}, así que no se parten en
+dos tokens y una diagonal solo es \cmd{DIVIDE} cuando no abre un comentario.
+\item En \cmd{3.14} empatan \cmd{\{NUM\}} y \cmd{\{NUM\_MAL\}} y gana \cmd{\{NUM\}}; en
+\cmd{3.14.5} o \cmd{7.} solo \cmd{\{NUM\_MAL\}} cubre la cadena completa. En \cmd{2abc},
+\cmd{\{ID\_MAL\}} es más larga que \cmd{\{NUM\}} y el lexema no se divide.
+\end{itemize}
+
+\noindent\textbf{Autómatas.} Flex traduce las expresiones a un AFD. Las figuras muestran los de
+identificadores y constantes, y los de los operadores relacionales y de asignación.
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[initial text={inicio}, shorten >=1pt, node distance=2.5cm, on grid, auto,
+                    >=Stealth, every state/.style={minimum size=8mm}, font=\small]
+  \node[state, initial]   (q0) {$q_0$};
+  \node[state, accepting] (q1) [above right=1.1cm and 3cm of q0, label=above:{\cmd{ID}}] {$q_1$};
+  \node[state, accepting] (q2) [below right=1.1cm and 3cm of q0, label=below:{\cmd{NUMBER}}] {$q_2$};
+  \node[state]            (q3) [right=of q2] {$q_3$};
+  \node[state, accepting] (q4) [right=of q3, label=below:{\cmd{NUMBER}}] {$q_4$};
+  \path[->]
+    (q0) edge node {letra, \cmd{\_}} (q1)
+    (q1) edge [loop right] node {letra, dígito, \cmd{\_}} ()
+    (q0) edge node [swap] {dígito} (q2)
+    (q2) edge [loop above] node {dígito} ()
+    (q2) edge node {\cmd{.}} (q3)
+    (q3) edge node {dígito} (q4)
+    (q4) edge [loop above] node {dígito} ();
+\end{tikzpicture}
+\caption{AFD de \cmd{\{ID\}} y \cmd{\{NUM\}}. Las palabras reservadas se separan de \cmd{ID} por
+la prioridad de las reglas.}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[initial text={inicio}, shorten >=1pt, node distance=2.4cm, on grid, auto,
+                    >=Stealth, every state/.style={minimum size=7mm}, font=\small]
+  \node[state, initial]   (q0) {$q_0$};
+  \node[state, accepting] (q1) [above right=2.3cm and 2.6cm of q0, label=above:{\cmd{LESS}}] {$q_1$};
+  \node[state, accepting] (q2) [right=of q1, label=above:{\cmd{LESS\_EQUAL}}] {$q_2$};
+  \node[state, accepting] (q3) [above right=0.8cm and 2.6cm of q0, label=above:{\cmd{GREATER}}] {$q_3$};
+  \node[state, accepting] (q4) [right=of q3, label=above:{\cmd{GREATER\_EQUAL}}] {$q_4$};
+  \node[state, accepting] (q5) [below right=0.8cm and 2.6cm of q0, label=below:{\cmd{ASSIGN}}] {$q_5$};
+  \node[state, accepting] (q6) [right=of q5, label=below:{\cmd{EQUAL}}] {$q_6$};
+  \node[state]            (q7) [below right=2.3cm and 2.6cm of q0] {$q_7$};
+  \node[state, accepting] (q8) [right=of q7, label=below:{\cmd{NOT\_EQUAL}}] {$q_8$};
+  \path[->]
+    (q0) edge node {\cmd{<}} (q1)  (q1) edge node {\cmd{=}} (q2)
+    (q0) edge node[pos=0.6] {\cmd{>}} (q3)  (q3) edge node {\cmd{=}} (q4)
+    (q0) edge node[swap,pos=0.6] {\cmd{=}} (q5)  (q5) edge node {\cmd{=}} (q6)
+    (q0) edge node[swap] {\cmd{!}} (q7)  (q7) edge node {\cmd{=}} (q8);
+\end{tikzpicture}
+\caption{AFD de los operadores relacionales y de asignación. Un \cmd{!} sin \cmd{=} no llega a
+aceptación y se reporta como carácter no válido.}
+\end{figure}
+
+% ===========================================================================
+\section*{Analizador léxico}
+
+\begin{itemize}[leftmargin=1.1cm,itemsep=0.3em]
+\item \textbf{Estructura.} \cmd{src/lexico.l} tiene las tres secciones de Flex: definiciones
+(opciones \cmd{noyywrap}, \cmd{8bit}, el estado \cmd{COMENTARIO} y las definiciones regulares),
+reglas, y código de usuario con la tabla de símbolos, el reporte de errores y
+\cmd{analisis\_lexico()}.
+\item \textbf{Línea y columna.} Flex no lleva la columna. La macro \cmd{YY\_USER\_ACTION}, que se
+ejecuta antes de cada acción, guarda la posición inicial del lexema y recorre \cmd{yytext} para
+avanzar los contadores. Como procesa todo lexema, incluidos los comentarios de varias líneas, la
+posición es exacta en cualquier punto del archivo.
+\item \textbf{Comentarios.} \cmd{"//".*} descarta el comentario de línea. \cmd{/*} guarda su
+posición y entra al estado exclusivo \cmd{COMENTARIO}, donde todo se descarta hasta \cmd{*/}. Si
+el archivo termina antes, \cmd{<COMENTARIO><<EOF>>} reporta el error en la posición de apertura.
+\item \textbf{Interfaz.} \cmd{analisis\_lexico()} llama a \cmd{yylex()} hasta el fin de archivo
+y guarda cada token (clase, lexema, línea y columna) en un arreglo que termina en \cmd{FIN}. El
+analizador sintáctico solo recorre ese arreglo, igual que \cmd{tokens[]} y \cmd{lookahead} en el
+ejemplo en C del tema 4.4.
+\item \textbf{Tabla de símbolos.} Cada identificador se registra con su nombre, la línea de su
+primera aparición y el número de apariciones, con búsqueda lineal (tema 2.3).
+\end{itemize}
+
+\begin{lstlisting}[language=C]
+#define YY_USER_ACTION                                    \
+    tok_linea = linea; tok_columna = columna;             \
+    for (int k = 0; k < yyleng; k++) {                    \
+        if (yytext[k] == '\n') { linea++; columna = 1; }  \
+        else if ((yytext[k] & 0xC0) != 0x80) columna++;   \
+    }
+\end{lstlisting}
+
+% ===========================================================================
+\section*{Gramática}
+
+\noindent
+$G = (N, T, P, S)$, con $S = \nt{programa}$, $N$ formado por los 20 no terminales que aparecen
+a la izquierda de las producciones y $T$ por los terminales de la tabla~\ref{tab:tokens}
+(\cmd{int}, \cmd{float}, \cmd{if}, \cmd{else}, \cmd{while}, \cmd{id}, \cmd{num}, operadores y
+delimitadores). Producciones en BNF:
+
+\begin{lstlisting}
+<programa>       ::= <lista_sent>
+<lista_sent>     ::= <sentencia> <lista_sent> | ε
+<sentencia>      ::= <declaracion> | <asignacion> | <sent_if> | <sent_while>
+<declaracion>    ::= <tipo> id <inicializacion> <lista_id> ;
+<tipo>           ::= int | float
+<lista_id>       ::= , id <inicializacion> <lista_id> | ε
+<inicializacion> ::= = <E> | ε
+<asignacion>     ::= id = <E> ;
+<sent_if>        ::= if ( <condicion> ) <bloque> <parte_else>
+<parte_else>     ::= else <resto_else> | ε
+<resto_else>     ::= <bloque> | <sent_if>
+<sent_while>     ::= while ( <condicion> ) <bloque>
+<bloque>         ::= { <lista_sent> }
+<condicion>      ::= <E> <op_rel> <E>
+<op_rel>         ::= < | > | <= | >= | == | !=
+<E>              ::= <T> <E'>
+<E'>             ::= + <T> <E'> | - <T> <E'> | ε
+<T>              ::= <F> <T'>
+<T'>             ::= * <F> <T'> | / <F> <T'> | ε
+<F>              ::= ( <E> ) | id | num | - <F>
+\end{lstlisting}
+
+\noindent\textbf{Tratamiento de la ambigüedad} (criterios del tema 3.1):
+
+\begin{itemize}[leftmargin=1.1cm,itemsep=0.3em]
+\item \textbf{Precedencia.} $E \rightarrow E + E \mid E * E \mid \mathrm{id}$ da dos árboles para
+\cmd{id + id * id}. Aquí cada nivel solo contiene al siguiente: \nt{E} suma términos, \nt{T}
+multiplica factores y \nt{F} tiene los operandos, los paréntesis y el menos unario. Así \cmd{*}
+y \cmd{/} se agrupan antes que \cmd{+} y \cmd{-}, y cada cadena tiene un solo árbol.
+\item \textbf{Recursión por la izquierda.} $E \rightarrow E + T \mid T$ haría que \cmd{E()} se
+llamara a sí misma sin consumir tokens. Con $A \rightarrow A\alpha \mid \beta \Rightarrow A
+\rightarrow \beta A',\ A' \rightarrow \alpha A' \mid \varepsilon$ quedan \nt{E} y \nt{E'}; lo
+mismo para \nt{T}. Las listas se definieron recursivas por la derecha.
+\item \textbf{Factorización.} El \cmd{if} con y sin \cmd{else} comparte el prefijo
+\cmd{if ( condicion ) bloque}, que queda una sola vez en \nt{sent\_if}; la decisión pasa a
+\nt{parte\_else}. \cmd{else \{\}} y \cmd{else if} comparten \cmd{else} y se separan en
+\nt{resto\_else}.
+\item \textbf{\cmd{else} colgante.} Como el cuerpo de un \cmd{if} siempre es un bloque entre
+llaves, cada \cmd{else} pertenece a un solo \cmd{if}. En la gramática, \cmd{else} no está en
+FOLLOW(\nt{parte\_else}) y la celda $M[\nt{parte\_else}, \texttt{else}]$ tiene una sola
+producción.
+\end{itemize}
+
+% ===========================================================================
+\section*{Conjuntos FIRST y FOLLOW}
+
+\noindent
+Se calcularon con las reglas del tema 4.1, iterando hasta que ningún conjunto cambió. Para
+abreviar, $\Ini = \{\texttt{int}, \texttt{float}, \texttt{id}, \texttt{if}, \texttt{while}\}$
+son los inicios de sentencia, $\Exp = \{\texttt{id}, \texttt{num}, \texttt{-}, \texttt{(}\}$ los
+de expresión y $\Rel = \{\texttt{<}, \texttt{>}, \texttt{<=}, \texttt{>=}, \texttt{==},
+\texttt{!=}\}$ los operadores relacionales.
+
+\begin{table}[!htbp]
+\centering\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}l l l@{}}
+\toprule
+\textbf{No terminal} & \textbf{FIRST} & \textbf{FOLLOW} \\
+\midrule
+\nt{programa}, \nt{lista\_sent} & $\Ini \cup \{\varepsilon\}$ & $\{\texttt{\$}\}$ y
+$\{\texttt{\}}, \texttt{\$}\}$ \\
+\nt{sentencia} & $\Ini$ & $\Ini \cup \{\texttt{\}}, \texttt{\$}\}$ \\
+\nt{declaracion} & $\{\texttt{int}, \texttt{float}\}$ & $\Ini \cup \{\texttt{\}}, \texttt{\$}\}$ \\
+\nt{tipo} & $\{\texttt{int}, \texttt{float}\}$ & $\{\texttt{id}\}$ \\
+\nt{lista\_id} & $\{\texttt{,}, \varepsilon\}$ & $\{\texttt{;}\}$ \\
+\nt{inicializacion} & $\{\texttt{=}, \varepsilon\}$ & $\{\texttt{;}, \texttt{,}\}$ \\
+\nt{asignacion} & $\{\texttt{id}\}$ & $\Ini \cup \{\texttt{\}}, \texttt{\$}\}$ \\
+\nt{sent\_if} & $\{\texttt{if}\}$ & $\Ini \cup \{\texttt{\}}, \texttt{\$}\}$ \\
+\nt{parte\_else} & $\{\texttt{else}, \varepsilon\}$ & $\Ini \cup \{\texttt{\}}, \texttt{\$}\}$ \\
+\nt{resto\_else} & $\{\texttt{if}, \texttt{\{}\}$ & $\Ini \cup \{\texttt{\}}, \texttt{\$}\}$ \\
+\nt{sent\_while} & $\{\texttt{while}\}$ & $\Ini \cup \{\texttt{\}}, \texttt{\$}\}$ \\
+\nt{bloque} & $\{\texttt{\{}\}$ & $\Ini \cup \{\texttt{else}, \texttt{\}}, \texttt{\$}\}$ \\
+\nt{condicion} & $\Exp$ & $\{\texttt{)}\}$ \\
+\nt{op\_rel} & $\Rel$ & $\Exp$ \\
+\nt{E}, \nt{E'} & $\Exp$; \ $\{\texttt{+}, \texttt{-}, \varepsilon\}$ &
+$\Rel \cup \{\texttt{)}, \texttt{;}, \texttt{,}\}$ \\
+\nt{T}, \nt{T'} & $\Exp$; \ $\{\texttt{*}, \texttt{/}, \varepsilon\}$ &
+$\{\texttt{+}, \texttt{-}\} \cup \Rel \cup \{\texttt{)}, \texttt{;}, \texttt{,}\}$ \\
+\nt{F} & $\Exp$ & $\{\texttt{+}, \texttt{-}, \texttt{*}, \texttt{/}\} \cup \Rel \cup
+\{\texttt{)}, \texttt{;}, \texttt{,}\}$ \\
+\bottomrule
+\end{tabular}
+\caption{Conjuntos FIRST y FOLLOW.}
+\end{table}
+
+% ===========================================================================
+\section*{Tabla de análisis LL(1)}
+
+\noindent
+Se llenó con el algoritmo del tema 4.2: para cada $A \rightarrow \alpha$, la producción va en
+$M[A, a]$ para todo $a \in \text{FIRST}(\alpha)$ y, si $\varepsilon \in \text{FIRST}(\alpha)$,
+también en $M[A, b]$ para todo $b \in \text{FOLLOW}(A)$. La tabla completa tiene 20 filas y 25
+columnas; se presenta por producción y cualquier celda que no aparece es error.
+
+\begin{small}
+\renewcommand{\arraystretch}{1.12}
+\begin{longtable}{@{}l p{4.6cm} p{6.6cm}@{}}
+\toprule
+\textbf{No terminal} & \textbf{Lookahead} & \textbf{Producción} \\
+\midrule
+\endhead
+\nt{programa} & $\Ini$, \texttt{\$} & \nt{lista\_sent} \\
+\nt{lista\_sent} & $\Ini$ & \nt{sentencia} \nt{lista\_sent} \\
+ & \texttt{\}}, \texttt{\$} & $\varepsilon$ \\
+\nt{sentencia} & \texttt{int}, \texttt{float} \,/\, \texttt{id} \,/\, \texttt{if} \,/\, \texttt{while}
+ & \nt{declaracion} \,/\, \nt{asignacion} \,/\, \nt{sent\_if} \,/\, \nt{sent\_while} \\
+\nt{declaracion} & \texttt{int}, \texttt{float} & \nt{tipo} \texttt{id} \nt{inicializacion} \nt{lista\_id} \texttt{;} \\
+\nt{tipo} & \texttt{int} \,/\, \texttt{float} & \texttt{int} \,/\, \texttt{float} \\
+\nt{lista\_id} & \texttt{,} & \texttt{,} \texttt{id} \nt{inicializacion} \nt{lista\_id} \\
+ & \texttt{;} & $\varepsilon$ \\
+\nt{inicializacion} & \texttt{=} & \texttt{=} \nt{E} \\
+ & \texttt{;}, \texttt{,} & $\varepsilon$ \\
+\nt{asignacion} & \texttt{id} & \texttt{id} \texttt{=} \nt{E} \texttt{;} \\
+\nt{sent\_if} & \texttt{if} & \texttt{if} \texttt{(} \nt{condicion} \texttt{)} \nt{bloque} \nt{parte\_else} \\
+\nt{parte\_else} & \texttt{else} & \texttt{else} \nt{resto\_else} \\
+ & $\Ini$, \texttt{\}}, \texttt{\$} & $\varepsilon$ \\
+\nt{resto\_else} & \texttt{\{} \,/\, \texttt{if} & \nt{bloque} \,/\, \nt{sent\_if} \\
+\nt{sent\_while} & \texttt{while} & \texttt{while} \texttt{(} \nt{condicion} \texttt{)} \nt{bloque} \\
+\nt{bloque} & \texttt{\{} & \texttt{\{} \nt{lista\_sent} \texttt{\}} \\
+\nt{condicion} & $\Exp$ & \nt{E} \nt{op\_rel} \nt{E} \\
+\nt{op\_rel} & cada $r \in \Rel$ & $r$ \\
+\nt{E} & $\Exp$ & \nt{T} \nt{E'} \\
+\nt{E'} & \texttt{+} \,/\, \texttt{-} & \texttt{+} \nt{T} \nt{E'} \,/\, \texttt{-} \nt{T} \nt{E'} \\
+ & $\Rel$, \texttt{)}, \texttt{;}, \texttt{,} & $\varepsilon$ \\
+\nt{T} & $\Exp$ & \nt{F} \nt{T'} \\
+\nt{T'} & \texttt{*} \,/\, \texttt{/} & \texttt{*} \nt{F} \nt{T'} \,/\, \texttt{/} \nt{F} \nt{T'} \\
+ & \texttt{+}, \texttt{-}, $\Rel$, \texttt{)}, \texttt{;}, \texttt{,} & $\varepsilon$ \\
+\nt{F} & \texttt{(} \,/\, \texttt{id} \,/\, \texttt{num} \,/\, \texttt{-} & \texttt{(} \nt{E} \texttt{)} \,/\, \texttt{id} \,/\, \texttt{num} \,/\, \texttt{-} \nt{F} \\
+\bottomrule
+\caption{Tabla LL(1) por producción. La diagonal empareja cada lookahead con su producción, en
+el mismo orden.}
+\end{longtable}
+\end{small}
+
+\vspace{-0.6em}
+\noindent
+Ninguna celda tiene más de una producción: la gramática es LL(1) y se analiza con un token de
+anticipación, sin retroceso.
+
+% ===========================================================================
+\section*{Método de análisis sintáctico}
+
+\noindent
+El analizador es descendente recursivo predictivo (tema 4.4). Cada no terminal es una función
+de \cmd{src/sintactico.c} con su mismo nombre (\nt{E'} y \nt{T'} son \cmd{E\_Prime()} y
+\cmd{T\_Prime()}). \cmd{lookahead} apunta al token actual; \cmd{match(t)} avanza si la clase
+coincide y reporta un error si no. Cuando hay varias producciones, la función elige la de
+$M[A, \texttt{lookahead}]$ con un \cmd{if} o un \cmd{switch}, y la producción $\varepsilon$ se
+aplica cuando el token no inicia ninguna otra alternativa, igual que en el código de clase.
+
+\begin{lstlisting}[language=C]
+/* E' → + T E' | - T E' | ε */
+static void E_Prime(void)
+{
+    if (panico) return;
+    if (lookahead->tipo == PLUS || lookahead->tipo == MINUS) {
+        match(lookahead->tipo);
+        T();
+        E_Prime();
+    }
+}
+
+/* F → ( E ) | id | num | - F */
+static void F(void)
+{
+    if (panico) return;
+    switch (lookahead->tipo) {
+    case LPAREN: match(LPAREN); E(); match(RPAREN); break;
+    case ID:     match(ID); break;
+    case NUMBER: match(NUMBER); break;
+    case MINUS:  match(MINUS); F(); break;
+    default:     error("identificador, número, '(' o '-'");
+    }
+}
+\end{lstlisting}
+
+\noindent
+La entrada se acepta si al terminar \cmd{programa()} el lookahead es \cmd{FIN} y no hubo
+errores. La tabla~\ref{tab:simulacion} simula el análisis de \cmd{y = x + 5;}
+(\cmd{id = id + num ; \$}); el tope de la pila está a la izquierda y las llamadas de las
+funciones siguen las mismas expansiones.
+
+\begin{footnotesize}
+\renewcommand{\arraystretch}{1.08}
+\begin{longtable}{@{}p{5.5cm} p{3.4cm} p{5.0cm}@{}}
+\toprule
+\textbf{Pila} & \textbf{Entrada} & \textbf{Acción} \\
+\midrule
+\endhead
+\nt{programa} \texttt{\$} & \texttt{id = id + num ; \$} & \nt{programa} $\rightarrow$ \nt{lista\_sent} \\
+\nt{lista\_sent} \texttt{\$} & \texttt{id = id + num ; \$} & \nt{lista\_sent} $\rightarrow$ \nt{sentencia} \nt{lista\_sent} \\
+\nt{sentencia} \nt{lista\_sent} \texttt{\$} & \texttt{id = id + num ; \$} & \nt{sentencia} $\rightarrow$ \nt{asignacion} \\
+\nt{asignacion} \nt{lista\_sent} \texttt{\$} & \texttt{id = id + num ; \$} & \nt{asignacion} $\rightarrow$ \texttt{id = }\nt{E}\texttt{ ;} \\
+\texttt{id = }\nt{E}\texttt{ ;} \nt{lista\_sent} \texttt{\$} & \texttt{id = id + num ; \$} & Emparejar \texttt{id} \\
+\texttt{= }\nt{E}\texttt{ ;} \nt{lista\_sent} \texttt{\$} & \texttt{= id + num ; \$} & Emparejar \texttt{=} \\
+\nt{E} \texttt{;} \nt{lista\_sent} \texttt{\$} & \texttt{id + num ; \$} & \nt{E} $\rightarrow$ \nt{T} \nt{E'} \\
+\nt{T} \nt{E'} \texttt{;} \nt{lista\_sent} \texttt{\$} & \texttt{id + num ; \$} & \nt{T} $\rightarrow$ \nt{F} \nt{T'} \\
+\nt{F} \nt{T'} \nt{E'} \texttt{;} \nt{lista\_sent} \texttt{\$} & \texttt{id + num ; \$} & \nt{F} $\rightarrow$ \texttt{id} \\
+\texttt{id} \nt{T'} \nt{E'} \texttt{;} \nt{lista\_sent} \texttt{\$} & \texttt{id + num ; \$} & Emparejar \texttt{id} \\
+\nt{T'} \nt{E'} \texttt{;} \nt{lista\_sent} \texttt{\$} & \texttt{+ num ; \$} & \nt{T'} $\rightarrow$ $\varepsilon$ \\
+\nt{E'} \texttt{;} \nt{lista\_sent} \texttt{\$} & \texttt{+ num ; \$} & \nt{E'} $\rightarrow$ \texttt{+} \nt{T} \nt{E'} \\
+\texttt{+} \nt{T} \nt{E'} \texttt{;} \nt{lista\_sent} \texttt{\$} & \texttt{+ num ; \$} & Emparejar \texttt{+} \\
+\nt{T} \nt{E'} \texttt{;} \nt{lista\_sent} \texttt{\$} & \texttt{num ; \$} & \nt{T} $\rightarrow$ \nt{F} \nt{T'} \\
+\nt{F} \nt{T'} \nt{E'} \texttt{;} \nt{lista\_sent} \texttt{\$} & \texttt{num ; \$} & \nt{F} $\rightarrow$ \texttt{num} \\
+\texttt{num} \nt{T'} \nt{E'} \texttt{;} \nt{lista\_sent} \texttt{\$} & \texttt{num ; \$} & Emparejar \texttt{num} \\
+\nt{T'} \nt{E'} \texttt{;} \nt{lista\_sent} \texttt{\$} & \texttt{; \$} & \nt{T'} $\rightarrow$ $\varepsilon$ \\
+\nt{E'} \texttt{;} \nt{lista\_sent} \texttt{\$} & \texttt{; \$} & \nt{E'} $\rightarrow$ $\varepsilon$ \\
+\texttt{;} \nt{lista\_sent} \texttt{\$} & \texttt{; \$} & Emparejar \texttt{;} \\
+\nt{lista\_sent} \texttt{\$} & \texttt{\$} & \nt{lista\_sent} $\rightarrow$ $\varepsilon$ \\
+\texttt{\$} & \texttt{\$} & Aceptar \\
+\bottomrule
+\caption{Simulación LL(1) de \cmd{y = x + 5;}.}
+\label{tab:simulacion}
+\end{longtable}
+\end{footnotesize}
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[level distance=8.5mm, font=\small,
+  edge from parent/.style={draw, line width=0.4pt},
+  level 1/.style={sibling distance=38mm}, level 2/.style={sibling distance=38mm},
+  level 3/.style={sibling distance=19mm}, level 4/.style={sibling distance=19mm},
+  level 5/.style={sibling distance=34mm}, level 6/.style={sibling distance=13mm},
+  level 7/.style={sibling distance=11mm}]
+\node {\nt{programa}}
+  child {node {\nt{lista\_sent}}
+    child {node {\nt{sentencia}}
+      child {node {\nt{asignacion}}
+        child {node {\cmd{id} (y)}}
+        child {node {\cmd{=}}}
+        child {node {\nt{E}}
+          child {node {\nt{T}}
+            child {node {\nt{F}} child {node {\cmd{id} (x)}}}
+            child {node {\nt{T'}} child {node {\eps}}}}
+          child {node {\nt{E'}}
+            child {node {\cmd{+}}}
+            child {node {\nt{T}}
+              child {node {\nt{F}} child {node {\cmd{num} (5)}}}
+              child {node {\nt{T'}} child {node {\eps}}}}
+            child {node {\nt{E'}} child {node {\eps}}}}}
+        child {node {\cmd{;}}}}}
+    child {node {\nt{lista\_sent}} child {node {\eps}}}};
+\end{tikzpicture}
+\caption{Árbol sintáctico de \cmd{y = x + 5;}. Cada nodo interno es una llamada a función y
+cada hoja, un \cmd{match()}.}
+\end{figure}
+
+% ===========================================================================
+\section*{Manejo de errores}
+
+\begin{respuesta}
+\small\ttfamily
+Error léxico en línea L, columna C: descripción 'lexema'.\\
+Error sintáctico en línea 1, columna 12: Se esperaba ')' antes de ';'.
+\end{respuesta}
+
+\noindent
+El segundo mensaje es el que produce el programa para \cmd{x = (10 + 5;}, el caso de la
+asignación. Cuando hay varias alternativas válidas se enumeran (\cmd{Se esperaba identificador,
+número, '(' o '-' antes de ')'}) y al final del archivo el mensaje dice \cmd{antes de fin de
+archivo}.
+
+\begin{table}[!htbp]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{4.2cm} l X@{}}
+\toprule
+\textbf{Error léxico} & \textbf{Ejemplo} & \textbf{Recuperación} \\
+\midrule
+Carácter no válido & \cmd{@ \# \$ ñ} & Se descarta y el análisis sigue \\
+Número mal formado & \cmd{3.14.5}, \cmd{7.} & Se entrega como \cmd{NUMBER} \\
+Identificador mal formado & \cmd{2abc}, \cmd{año} & Se entrega como \cmd{ID} \\
+Comentario sin cerrar & \cmd{/* \dots} & Se reporta en la apertura; termina la entrada \\
+\bottomrule
+\end{tabularx}
+\caption{Errores léxicos y su recuperación.}
+\end{table}
+
+\noindent
+Entregar los lexemas mal formados con la clase que se intentaba escribir evita errores
+sintácticos en cascada: en \cmd{x = 3.14.5;} se reporta el número y la asignación sigue siendo
+correcta.
+
+\noindent\textbf{Modo pánico} (temas 4.3 y 4.4). Un error sintáctico se detecta cuando
+\cmd{match()} no encuentra el terminal esperado o la celda $M[A, \texttt{lookahead}]$ está
+vacía. Entonces:
+
+\begin{enumerate}[leftmargin=1.1cm,itemsep=0.25em]
+\item Se activa la bandera \cmd{panico}. Mientras está activa no se reportan más errores,
+\cmd{match()} no consume tokens y las funciones regresan, hasta volver a
+\cmd{lista\_sentencias()}.
+\item \cmd{sincronizar()} descarta tokens hasta el conjunto \{\cmd{;}, \cmd{\}}, \cmd{\$}\}. Si
+en el camino se abre un bloque, lo salta completo contando llaves; si la sentencia con error era
+un \cmd{if}, también salta su \cmd{else}. Un \cmd{\}} sin bloque abierto no se consume porque
+cierra el bloque que contiene al error.
+\item Se desactiva la bandera y el análisis sigue con la siguiente sentencia.
+\end{enumerate}
+
+% ===========================================================================
+\section*{Pruebas}
+
+\noindent
+\cmd{pruebas/validos} tiene seis programas que deben aceptarse y \cmd{pruebas/invalidos} ocho
+que deben rechazarse. Cada inválido indica en un comentario inicial los errores que contiene.
+\cmd{make pruebas} los ejecuta todos, muestra una línea por caso y guarda la salida completa de
+cada uno en \cmd{pruebas/resultados/}.
+
+\begin{table}[!htbp]
+\centering\small
+\begin{tabular}{@{}l l c c@{}}
+\toprule
+\textbf{Archivo} & \textbf{Resultado} & \textbf{Léxicos} & \textbf{Sintácticos} \\
+\midrule
+\cmd{validos/01\_ejemplo\_enunciado} & Aceptado & 0 & 0 \\
+\cmd{validos/02\_declaraciones\_y\_comentarios} & Aceptado & 0 & 0 \\
+\cmd{validos/03\_expresiones\_aritmeticas} & Aceptado & 0 & 0 \\
+\cmd{validos/04\_condicionales} & Aceptado & 0 & 0 \\
+\cmd{validos/05\_ciclos\_anidados} & Aceptado & 0 & 0 \\
+\cmd{validos/06\_programa\_completo} & Aceptado & 0 & 0 \\
+\midrule
+\cmd{invalidos/01\_lexico\_caracteres\_invalidos} & Rechazado & 4 & 2 \\
+\cmd{invalidos/02\_lexico\_literales\_mal\_formados} & Rechazado & 3 & 0 \\
+\cmd{invalidos/03\_lexico\_comentario\_sin\_cerrar} & Rechazado & 1 & 0 \\
+\cmd{invalidos/04\_sintactico\_parentesis} & Rechazado & 0 & 3 \\
+\cmd{invalidos/05\_sintactico\_punto\_y\_coma} & Rechazado & 0 & 3 \\
+\cmd{invalidos/06\_sintactico\_estructuras\_control} & Rechazado & 0 & 4 \\
+\cmd{invalidos/07\_sintactico\_declaraciones} & Rechazado & 0 & 6 \\
+\cmd{invalidos/08\_mixto\_lexico\_y\_sintactico} & Rechazado & 2 & 3 \\
+\bottomrule
+\end{tabular}
+\caption{Resultado de la batería de pruebas.}
+\end{table}
+
+\noindent
+Para cada archivo, la salida muestra la tabla de tokens con línea y columna, la secuencia de
+tokens por línea en el formato de la asignación, la tabla de símbolos, los errores y el
+resultado. Fragmento para el programa de ejemplo de la asignación:
+
+\begin{lstlisting}
+Secuencia de tokens por línea
+    1  INT ID SEMICOLON
+    2  INT ID SEMICOLON
+    3  ID ASSIGN NUMBER SEMICOLON
+    4  ID ASSIGN ID PLUS NUMBER SEMICOLON
+    5  IF LPAREN ID GREATER NUMBER RPAREN LBRACE
+   ...
+== Resultado ==
+El programa es léxica y sintácticamente válido.
+\end{lstlisting}
+
+% ===========================================================================
+\needspace{12\baselineskip}
+\section*{Instalación y ejecución}
+
+\noindent
+Requiere \cmd{gcc}, \cmd{flex} y \cmd{make}, sin otras dependencias. En Linux o WSL:
+
+\begin{lstlisting}
+sudo apt install build-essential flex # instala las herramientas
+make                                  # compila
+./analizador programa.txt             # analiza un archivo
+make pruebas                          # corre los 14 casos de prueba
+\end{lstlisting}
+
+\noindent
+El programa termina con código 0 si la entrada es válida, 1 si tiene errores y 2 si no se pudo
+abrir el archivo.
+
+\begin{table}[!htbp]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{Archivo} & \textbf{Contenido} \\
+\midrule
+\cmd{src/tokens.h} & Clases de token, estructura \cmd{Token} e interfaz entre módulos \\
+\cmd{src/lexico.l} & Especificación Flex, errores léxicos, tabla de símbolos y arreglo de tokens \\
+\cmd{src/sintactico.c} & Funciones por no terminal, \cmd{match()}, mensajes y modo pánico \\
+\cmd{src/main.c} & Lectura del archivo y reporte de resultados \\
+\cmd{pruebas/} & Casos válidos e inválidos, script de ejecución y salidas \\
+\bottomrule
+\end{tabularx}
+\caption{Organización del código.}
+\end{table}
+
+% ===========================================================================
+\section*{Limitaciones}
+
+\begin{itemize}[leftmargin=1.1cm,itemsep=0.25em]
+\item No hay análisis semántico: no se verifica la declaración previa de variables ni la
+compatibilidad de tipos.
+\item Una condición admite una sola comparación; el lenguaje no tiene operadores lógicos.
+\item El modo pánico puede descartar una sentencia correcta que sigue a un error: si falta el
+\cmd{;} de una línea, la sincronización llega al \cmd{;} de la siguiente.
+\end{itemize}
+
+% ===========================================================================
+\section*{Bibliografía}
+
+\begin{itemize}[leftmargin=1.2cm,itemsep=0.5em]
+\item Aho, A. V., Lam, M. S., Sethi, R. y Ullman, J. D. \emph{Compiladores: principios, técnicas
+y herramientas}, 2.ª ed. Pearson, 2008.
+\item Castañeda Castañeda, M. E. \emph{Presentaciones de la asignatura Compiladores}, temas 1.4,
+2.1 a 2.6, 3.1, 3.2 y 4.1 a 4.4. Facultad de Ingeniería, UNAM, 2026.
+\item Paxson, V., Estes, W. y Millaway, J. \emph{Lexical Analysis With Flex, for Flex 2.6.4}.
+Manual de Flex.
+\end{itemize}
+
+% ===========================================================================
+\section*{Anexo: declaración de uso de inteligencia artificial}
+
+\noindent
+La asignatura permite usar herramientas de inteligencia artificial si se declaran las
+instrucciones empleadas. En este proyecto se usó un asistente de IA generativa con acceso al
+navegador, que consultó en Classroom la asignación, la rúbrica y las presentaciones del curso. El
+asistente generó el código fuente, los casos de prueba y este documento, y preparó el historial
+de versiones del repositorio. El equipo revisó el contenido, ejecutó las pruebas y se encarga de
+la demostración.
+
+Las instrucciones que definieron el contenido técnico del proyecto se presentan en el orden en
+que se dieron. La redacción está resumida y editada, y conserva el sentido de cada una.
+
+\begin{apartado}{INSTRUCCIÓN 1 \ \textbullet\ \ DESARROLLO DEL PROYECTO}
+Desarrolla el proyecto final de Compiladores conforme a la asignación y la rúbrica publicadas en
+Classroom. Toma de las presentaciones del profesor los métodos vistos en clase (expresiones
+regulares con Flex, gramáticas LL(1), análisis descendente recursivo y recuperación en modo
+pánico) y aplícalos sin sustituirlos por otras técnicas. Escribe código sencillo y fácil de
+mantener, y documentación con un registro técnico profesional. Publica el proyecto en un
+repositorio de GitHub con un commit por etapa e invita a los demás integrantes.
+\end{apartado}
+
+\begin{apartado}{INSTRUCCIÓN 2 \ \textbullet\ \ RECOPILACIÓN Y PLANEACIÓN}
+Antes de programar, reúne la asignación, la rúbrica y el material del curso, y redacta documentos
+de requisitos y de planeación que sirvan de contexto para el resto del trabajo. El repositorio se
+crea al final.
+\end{apartado}
+
+\begin{apartado}{INSTRUCCIÓN 3 \ \textbullet\ \ ALCANCE DE LA ENTREGA}
+Implementa el proyecto completo: analizadores, pruebas y documento técnico. Guarda el contexto
+del trabajo en archivos Markdown dentro de un archivo comprimido. Los integrantes son Andrés
+Basilio Illescas, Samuel Santiago Cruz Macedo y Jesús Jafet Fernández Hernandez.
+\end{apartado}
+
+\begin{apartado}{INSTRUCCIÓN 4 \ \textbullet\ \ REVISIÓN CONTRA LA RÚBRICA}
+Revisa el estado del proyecto frente a la rúbrica, identifica lo que falta y de qué depende, y
+haz los ajustes necesarios para obtener la calificación máxima.
+\end{apartado}
+
+\begin{apartado}{INSTRUCCIÓN 5 \ \textbullet\ \ AJUSTES FINALES}
+Adapta el documento técnico al formato LaTeX que el equipo usa en sus reportes y reduce su
+extensión. Simplifica la compilación y la ejecución de las pruebas para que el proyecto se corra
+con pocos comandos. Crea el repositorio en GitHub y envía las invitaciones a los integrantes.
+\end{apartado}
+
+\end{document}
