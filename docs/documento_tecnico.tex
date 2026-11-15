@@ -30,6 +30,9 @@
 \usepackage{listings}
 \usepackage{tikz}
 \usetikzlibrary{automata,positioning,arrows.meta,shapes.geometric}
+\usepackage[titles]{tocloft}
+\setlength{\cftsecnumwidth}{2em}
+\setlength{\cftsubsecnumwidth}{2.8em}
 \usepackage{caption}
 \captionsetup{justification=centering}
 \usepackage{xurl}
@@ -54,6 +57,10 @@ headheight=15pt, headsep=0.7cm, footskip=1.1cm}
 \setstretch{1.15}
 \setlength{\parskip}{0.45em}
 \setlength{\parindent}{0pt}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.75}
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -77,7 +84,7 @@ headheight=15pt, headsep=0.7cm, footskip=1.1cm}
 \newcommand{\eps}{$\varepsilon$}
 
 \newtcolorbox{apartado}[1]{
-enhanced, breakable,
+enhanced,
 colback=white, colframe=black,
 boxrule=0.6pt, arc=0pt,
 left=9pt, right=9pt, top=7pt, bottom=7pt,
@@ -109,7 +116,7 @@ literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{
          {→}{{$\rightarrow$}}1 {ε}{{$\varepsilon$}}1
 }
 \lstdefinestyle{fuente}{
-style=codigo, numbers=left, numberstyle=\tiny\color{black!55}, numbersep=12pt,
+style=codigo, basicstyle=\ttfamily\scriptsize, numbers=left, numberstyle=\tiny\color{black!55}, numbersep=12pt,
 xleftmargin=22pt, framexleftmargin=20pt, language=C
 }
 \lstset{style=codigo}
@@ -204,6 +211,7 @@ asignación.
 \noindent\textbf{Herramientas:} C (C99), Flex 2.6.4 y GNU Make.\\
 \noindent\textbf{Repositorio:} \url{https://github.com/samisal123/analizador-minic}
 
+\needspace{8\baselineskip}
 \subsection{Métodos del curso aplicados}
 
 Cada parte del proyecto sigue la técnica y la notación vistas en clase:
@@ -305,6 +313,7 @@ FIN & fin de archivo & & \\
 \label{tab:tokens}
 \end{table}
 
+\needspace{8\baselineskip}
 \subsection{Definiciones regulares}
 
 Están en la sección de definiciones de \cmd{src/lexico.l} (código~\ref{cod:lex-def}, líneas
@@ -334,6 +343,7 @@ UTF-8.
 \label{tab:reglas}
 \end{table}
 
+\needspace{8\baselineskip}
 \subsection{Resolución de conflictos}
 
 Flex elige la coincidencia más larga y, a igual longitud, la regla que aparece primero. El orden
@@ -349,6 +359,7 @@ dos tokens y una diagonal solo es \cmd{DIVIDE} cuando no abre un comentario.
 \cmd{\{ID\_MAL\}} es más larga que \cmd{\{NUM\}} y el lexema no se divide.
 \end{itemize}
 
+\needspace{8\baselineskip}
 \subsection{Autómatas}
 
 Flex traduce las expresiones a un AFD. Las figuras muestran los de identificadores y constantes,
@@ -407,6 +418,7 @@ $G = (N, T, P, S)$, con $S = \nt{programa}$, $N$ formado por los 20 no terminale
 la izquierda de las producciones y $T$ por los terminales de la tabla~\ref{tab:tokens}. Las
 producciones en BNF son:
 
+\needspace{22\baselineskip}
 \begin{lstlisting}
 <programa>       ::= <lista_sent>
 <lista_sent>     ::= <sentencia> <lista_sent> | ε
@@ -464,6 +476,7 @@ Para la tabla LL(1) cada alternativa se numera por separado, como en clase:
 \label{tab:producciones}
 \end{table}
 
+\needspace{8\baselineskip}
 \subsection{Tratamiento de la ambigüedad}
 
 \begin{itemize}[leftmargin=1.1cm,itemsep=0.3em]
@@ -492,13 +505,13 @@ producción.
 Se calcularon con las reglas del tema 4.1, iterando hasta que ningún conjunto cambió. El símbolo
 inicial lleva \cmd{\$} en su Follow.
 
-\begin{small}
-\renewcommand{\arraystretch}{1.18}
-\begin{longtable}{@{}l p{4.4cm} p{6.4cm}@{}}
+\begin{table}[!htbp]
+\centering\footnotesize
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}l >{\raggedright\arraybackslash}p{5.5cm} >{\raggedright\arraybackslash}p{6.3cm}@{}}
 \toprule
 \textbf{No terminal} & \textbf{First} & \textbf{Follow} \\
 \midrule
-\endhead
 \nt{programa} & \{ \texttt{int}, \texttt{float}, \texttt{if}, \texttt{while}, \texttt{id}, $\varepsilon$ \} & \{ \texttt{\$} \} \\
 \nt{lista\_sent} & \{ \texttt{int}, \texttt{float}, \texttt{if}, \texttt{while}, \texttt{id}, $\varepsilon$ \} & \{ \texttt{\}}, \texttt{\$} \} \\
 \nt{sentencia} & \{ \texttt{int}, \texttt{float}, \texttt{if}, \texttt{while}, \texttt{id} \} & \{ \texttt{int}, \texttt{float}, \texttt{if}, \texttt{while}, \texttt{id}, \texttt{\}}, \texttt{\$} \} \\
@@ -520,9 +533,10 @@ inicial lleva \cmd{\$} en su Follow.
 \nt{T'} & \{ \texttt{*}, \texttt{/}, $\varepsilon$ \} & \{ \texttt{+}, \texttt{-}, \texttt{<}, \texttt{>}, \texttt{<=}, \texttt{>=}, \texttt{==}, \texttt{!=}, \texttt{)}, \texttt{;}, \texttt{,} \} \\
 \nt{F} & \{ \texttt{id}, \texttt{num}, \texttt{-}, \texttt{(} \} & \{ \texttt{+}, \texttt{-}, \texttt{*}, \texttt{/}, \texttt{<}, \texttt{>}, \texttt{<=}, \texttt{>=}, \texttt{==}, \texttt{!=}, \texttt{)}, \texttt{;}, \texttt{,} \} \\
 \bottomrule
+\end{tabular}
 \caption{Conjuntos First y Follow.}
-\end{longtable}
-\end{small}
+\label{tab:firstfollow}
+\end{table}
 
 % ===========================================================================
 \section{Tabla de análisis LL(1)}
@@ -531,47 +545,76 @@ inicial lleva \cmd{\$} en su Follow.
 Para cada producción $A \rightarrow \alpha$ se escribe su número en $M[A, a]$ para todo
 $a \in \text{First}(\alpha)$ y, si $\varepsilon \in \text{First}(\alpha)$, también en
 $M[A, b]$ para todo $b \in \text{Follow}(A)$. Las celdas sin producción llevan $\nexists$ (no
-hay correspondencia), igual que en la tarea 13. La tabla~\ref{tab:matriz} usa la numeración de
-la tabla~\ref{tab:producciones}. Ninguna celda tiene más de una producción, así que la gramática
+hay correspondencia), igual que en la tarea 13. Por su ancho, la matriz se divide en dos partes (tablas~\ref{tab:matriz} y~\ref{tab:matriz2}) y usa la numeración de la tabla~\ref{tab:producciones}. Ninguna celda tiene más de una producción, así que la gramática
 es LL(1).
 
-\begin{landscape}
 \begin{table}[p]
-\centering\small
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.45}
-\resizebox{\linewidth}{!}{%
-\begin{tabular}{@{}l*{25}{c}@{}}
+\centering\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}l*{13}{c}@{}}
 \toprule
-\textbf{No terminal} & \textbf{\texttt{int}} & \textbf{\texttt{float}} & \textbf{\texttt{if}} & \textbf{\texttt{else}} & \textbf{\texttt{while}} & \textbf{\texttt{id}} & \textbf{\texttt{num}} & \textbf{\texttt{=}} & \textbf{\texttt{+}} & \textbf{\texttt{-}} & \textbf{\texttt{*}} & \textbf{\texttt{/}} & \textbf{\texttt{<}} & \textbf{\texttt{>}} & \textbf{\texttt{<=}} & \textbf{\texttt{>=}} & \textbf{\texttt{==}} & \textbf{\texttt{!=}} & \textbf{\texttt{(}} & \textbf{\texttt{)}} & \textbf{\texttt{\{}} & \textbf{\texttt{\}}} & \textbf{\texttt{;}} & \textbf{\texttt{,}} & \textbf{\texttt{\$}} \\
+\textbf{No terminal} & \textbf{\texttt{int}} & \textbf{\texttt{float}} & \textbf{\texttt{if}} & \textbf{\texttt{else}} & \textbf{\texttt{while}} & \textbf{\texttt{id}} & \textbf{\texttt{num}} & \textbf{\texttt{=}} & \textbf{\texttt{+}} & \textbf{\texttt{-}} & \textbf{\texttt{*}} & \textbf{\texttt{/}} & \textbf{\texttt{<}} \\
 \midrule
-\nt{programa} & 1 & 1 & 1 & $\nexists$ & 1 & 1 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 1 \\
-\nt{lista\_sent} & 2 & 2 & 2 & $\nexists$ & 2 & 2 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 3 & $\nexists$ & $\nexists$ & 3 \\
-\nt{sentencia} & 4 & 4 & 6 & $\nexists$ & 7 & 5 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
-\nt{declaracion} & 8 & 8 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
-\nt{tipo} & 9 & 10 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
-\nt{lista\_id} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 12 & 11 & $\nexists$ \\
-\nt{inicializacion} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 13 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 14 & 14 & $\nexists$ \\
-\nt{asignacion} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 15 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
-\nt{sent\_if} & $\nexists$ & $\nexists$ & 16 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
-\nt{parte\_else} & 18 & 18 & 18 & 17 & 18 & 18 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 18 & $\nexists$ & $\nexists$ & 18 \\
-\nt{resto\_else} & $\nexists$ & $\nexists$ & 20 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 19 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
-\nt{sent\_while} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 21 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
-\nt{bloque} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 22 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
-\nt{condicion} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 23 & 23 & $\nexists$ & $\nexists$ & 23 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 23 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
-\nt{op\_rel} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 24 & 25 & 26 & 27 & 28 & 29 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
-\nt{E} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 30 & 30 & $\nexists$ & $\nexists$ & 30 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 30 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
-\nt{E'} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 31 & 32 & $\nexists$ & $\nexists$ & 33 & 33 & 33 & 33 & 33 & 33 & $\nexists$ & 33 & $\nexists$ & $\nexists$ & 33 & 33 & $\nexists$ \\
-\nt{T} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 34 & 34 & $\nexists$ & $\nexists$ & 34 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 34 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
-\nt{T'} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 37 & 37 & 35 & 36 & 37 & 37 & 37 & 37 & 37 & 37 & $\nexists$ & 37 & $\nexists$ & $\nexists$ & 37 & 37 & $\nexists$ \\
-\nt{F} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 39 & 40 & $\nexists$ & $\nexists$ & 41 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 38 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{programa} & 1 & 1 & 1 & $\nexists$ & 1 & 1 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{lista\_sent} & 2 & 2 & 2 & $\nexists$ & 2 & 2 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{sentencia} & 4 & 4 & 6 & $\nexists$ & 7 & 5 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{declaracion} & 8 & 8 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{tipo} & 9 & 10 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{lista\_id} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{inicializacion} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 13 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{asignacion} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 15 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{sent\_if} & $\nexists$ & $\nexists$ & 16 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{parte\_else} & 18 & 18 & 18 & 17 & 18 & 18 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{resto\_else} & $\nexists$ & $\nexists$ & 20 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{sent\_while} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 21 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{bloque} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{condicion} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 23 & 23 & $\nexists$ & $\nexists$ & 23 & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{op\_rel} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 24 \\
+\nt{E} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 30 & 30 & $\nexists$ & $\nexists$ & 30 & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{E'} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 31 & 32 & $\nexists$ & $\nexists$ & 33 \\
+\nt{T} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 34 & 34 & $\nexists$ & $\nexists$ & 34 & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{T'} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 37 & 37 & 35 & 36 & 37 \\
+\nt{F} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 39 & 40 & $\nexists$ & $\nexists$ & 41 & $\nexists$ & $\nexists$ & $\nexists$ \\
 \bottomrule
-\end{tabular}}
-\caption{Tabla de análisis LL(1). Cada número es una producción de la
-tabla~\ref{tab:producciones}; $\nexists$ indica error.}
+\end{tabular}
+\caption{Tabla de análisis LL(1), columnas \texttt{int} a \texttt{<}. Cada número es una producción de la tabla~\ref{tab:producciones}; $\nexists$ indica error.}
 \label{tab:matriz}
+
+\vspace{1.2em}
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}l*{12}{c}@{}}
+\toprule
+\textbf{No terminal} & \textbf{\texttt{>}} & \textbf{\texttt{<=}} & \textbf{\texttt{>=}} & \textbf{\texttt{==}} & \textbf{\texttt{!=}} & \textbf{\texttt{(}} & \textbf{\texttt{)}} & \textbf{\texttt{\{}} & \textbf{\texttt{\}}} & \textbf{\texttt{;}} & \textbf{\texttt{,}} & \textbf{\texttt{\$}} \\
+\midrule
+\nt{programa} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 1 \\
+\nt{lista\_sent} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 3 & $\nexists$ & $\nexists$ & 3 \\
+\nt{sentencia} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{declaracion} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{tipo} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{lista\_id} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 12 & 11 & $\nexists$ \\
+\nt{inicializacion} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 14 & 14 & $\nexists$ \\
+\nt{asignacion} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{sent\_if} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{parte\_else} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 18 & $\nexists$ & $\nexists$ & 18 \\
+\nt{resto\_else} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 19 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{sent\_while} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{bloque} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 22 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{condicion} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 23 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{op\_rel} & 25 & 26 & 27 & 28 & 29 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{E} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 30 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{E'} & 33 & 33 & 33 & 33 & 33 & $\nexists$ & 33 & $\nexists$ & $\nexists$ & 33 & 33 & $\nexists$ \\
+\nt{T} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 34 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\nt{T'} & 37 & 37 & 37 & 37 & 37 & $\nexists$ & 37 & $\nexists$ & $\nexists$ & 37 & 37 & $\nexists$ \\
+\nt{F} & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & 38 & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ & $\nexists$ \\
+\bottomrule
+\end{tabular}
+\caption{Tabla de análisis LL(1), columnas \texttt{>} a \texttt{\$}.}
+\label{tab:matriz2}
 \end{table}
-\end{landscape}
+
 
 % ===========================================================================
 \section{Simulación del análisis}
@@ -582,17 +625,18 @@ Las simulaciones siguen el formato de clase: la pila empieza con el símbolo ini
 $M[\text{tope}, \text{primer símbolo de la cadena}]$; si es terminal y coincide con la cadena, se
 hace \emph{pop/avanza}; con \cmd{\$} en ambas columnas se termina con \emph{fin}.
 
+\needspace{8\baselineskip}
 \subsection{Simulación 1: \texttt{y = x + 5;} (válida)}
 
 El analizador léxico entrega \cmd{id = id + num ;}.
 
-\begin{footnotesize}
+\begin{table}[!htbp]
+\centering\footnotesize
 \renewcommand{\arraystretch}{1.08}
-\begin{longtable}{@{}p{6.2cm} p{3.0cm} p{4.6cm}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{5.0cm} >{\raggedright\arraybackslash}p{3.7cm} >{\raggedright\arraybackslash}p{5.6cm}@{}}
 \toprule
 \textbf{Pila} & \textbf{Cadena} & \textbf{Acción} \\
 \midrule
-\endhead
 \nt{programa} \texttt{\$} & \texttt{id} \texttt{=} \texttt{id} \texttt{+} \texttt{num} \texttt{;} \texttt{\$} & \nt{programa} $\rightarrow$ \nt{lista\_sent} \\
 \nt{lista\_sent} \texttt{\$} & \texttt{id} \texttt{=} \texttt{id} \texttt{+} \texttt{num} \texttt{;} \texttt{\$} & \nt{lista\_sent} $\rightarrow$ \nt{sentencia} \nt{lista\_sent} \\
 \nt{sentencia} \nt{lista\_sent} \texttt{\$} & \texttt{id} \texttt{=} \texttt{id} \texttt{+} \texttt{num} \texttt{;} \texttt{\$} & \nt{sentencia} $\rightarrow$ \nt{asignacion} \\
@@ -615,10 +659,10 @@ El analizador léxico entrega \cmd{id = id + num ;}.
 \nt{lista\_sent} \texttt{\$} & \texttt{\$} & \nt{lista\_sent} $\rightarrow$ $\varepsilon$ \\
 \texttt{\$} & \texttt{\$} & fin \\
 \bottomrule
+\end{tabular}
 \caption{Simulación de \cmd{y = x + 5;}.}
 \label{tab:sim1}
-\end{longtable}
-\end{footnotesize}
+\end{table}
 
 \begin{figure}[!htbp]
 \centering
@@ -652,17 +696,18 @@ analizador y cada hoja, un \cmd{match()}.}
 \label{fig:arbol}
 \end{figure}
 
+\needspace{8\baselineskip}
 \subsection{Simulación 2: \texttt{x = (10 + 5;} (inválida)}
 
 Es el caso de error de la asignación. La cadena de tokens es \cmd{id = ( num + num ;}.
 
-\begin{footnotesize}
+\begin{table}[!htbp]
+\centering\footnotesize
 \renewcommand{\arraystretch}{1.08}
-\begin{longtable}{@{}p{6.2cm} p{3.0cm} p{4.6cm}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{5.0cm} >{\raggedright\arraybackslash}p{3.7cm} >{\raggedright\arraybackslash}p{5.6cm}@{}}
 \toprule
 \textbf{Pila} & \textbf{Cadena} & \textbf{Acción} \\
 \midrule
-\endhead
 \nt{programa} \texttt{\$} & \texttt{id} \texttt{=} \texttt{(} \texttt{num} \texttt{+} \texttt{num} \texttt{;} \texttt{\$} & \nt{programa} $\rightarrow$ \nt{lista\_sent} \\
 \nt{lista\_sent} \texttt{\$} & \texttt{id} \texttt{=} \texttt{(} \texttt{num} \texttt{+} \texttt{num} \texttt{;} \texttt{\$} & \nt{lista\_sent} $\rightarrow$ \nt{sentencia} \nt{lista\_sent} \\
 \nt{sentencia} \nt{lista\_sent} \texttt{\$} & \texttt{id} \texttt{=} \texttt{(} \texttt{num} \texttt{+} \texttt{num} \texttt{;} \texttt{\$} & \nt{sentencia} $\rightarrow$ \nt{asignacion} \\
@@ -687,10 +732,10 @@ Es el caso de error de la asignación. La cadena de tokens es \cmd{id = ( num + 
 \nt{E'} \texttt{)} \nt{T'} \nt{E'} \texttt{;} \nt{lista\_sent} \texttt{\$} & \texttt{;} \texttt{\$} & \nt{E'} $\rightarrow$ $\varepsilon$ \\
 \texttt{)} \nt{T'} \nt{E'} \texttt{;} \nt{lista\_sent} \texttt{\$} & \texttt{;} \texttt{\$} & Error: se esperaba \texttt{)} \\
 \bottomrule
+\end{tabular}
 \caption{Simulación de \cmd{x = (10 + 5;}.}
 \label{tab:sim2}
-\end{longtable}
-\end{footnotesize}
+\end{table}
 
 En la última fila el tope es el terminal \cmd{)} y la cadena empieza con \cmd{;}: no hay
 \emph{pop/avanza} posible. Es exactamente el error que reporta el programa:
@@ -700,6 +745,7 @@ En la última fila el tope es el terminal \cmd{)} y la cadena empieza con \cmd{;
 \section{Implementación}
 \label{sec:implementacion}
 
+\needspace{8\baselineskip}
 \subsection{Arquitectura}
 
 El programa tiene cuatro archivos fuente. \cmd{main.c} abre el archivo, llama al analizador
@@ -709,6 +755,7 @@ con los conteos de error que cada uno devuelve.
 
 \begin{figure}[!htbp]
 \centering
+\resizebox{\linewidth}{!}{%
 \begin{tikzpicture}[font=\small, node distance=0.55cm and 0.6cm, >=Stealth,
   caja/.style={draw, rectangle, minimum height=1.0cm, align=center, inner sep=5pt},
   dato/.style={draw, rectangle, rounded corners=6pt, minimum height=0.9cm, align=center,
@@ -725,13 +772,14 @@ con los conteos de error que cada uno devuelve.
   \draw[->] (lex) -- (ts);
   \draw[->] (sin) -- node[right, font=\footnotesize] {errores} (res);
   \draw[->] (lex.south east) |- node[pos=0.75, below, font=\footnotesize] {errores léxicos} (res.west);
-\end{tikzpicture}
+\end{tikzpicture}}
 \caption{Flujo de datos entre los módulos.}
 \end{figure}
 
 Los listados de esta sección son el código del repositorio, con los mismos números de línea que
 los archivos.
 
+\needspace{8\baselineskip}
 \subsection{Interfaz común: \texttt{tokens.h}}
 
 \lstinputlisting[style=fuente, caption={\texttt{src/tokens.h}}, label=cod:tokens]{../src/tokens.h}
@@ -748,9 +796,11 @@ error.
 de errores sintácticos.
 \end{itemize}
 
+\needspace{8\baselineskip}
 \subsection{Analizador léxico: \texttt{lexico.l}}
 \label{sec:lexico}
 
+\needspace{6\baselineskip}
 \subsubsection*{Sección de definiciones}
 
 \lstinputlisting[style=fuente, firstline=1, lastline=40, firstnumber=1,
@@ -773,6 +823,7 @@ prueban las reglas que empiezan con \cmd{<COMENTARIO>}.
 \item \textbf{Líneas 32 a 40.} Las definiciones regulares de la sección~\ref{sec:tokens}.
 \end{itemize}
 
+\needspace{6\baselineskip}
 \subsubsection*{Sección de reglas}
 
 \lstinputlisting[style=fuente, firstline=42, lastline=88, firstnumber=42,
@@ -795,6 +846,7 @@ ninguna regla anterior es un carácter no válido. No devuelve token, así que e
 descarta y el análisis sigue.
 \end{itemize}
 
+\needspace{6\baselineskip}
 \subsubsection*{Código de usuario}
 
 \lstinputlisting[style=fuente, firstline=90, lastline=163, firstnumber=90,
@@ -818,9 +870,11 @@ imprimir la tabla de tokens primero, igual que el arreglo \cmd{tokens[]} del eje
 tema 4.4.
 \end{itemize}
 
+\needspace{8\baselineskip}
 \subsection{Analizador sintáctico: \texttt{sintactico.c}}
 \label{sec:sintactico}
 
+\needspace{6\baselineskip}
 \subsubsection*{Estado, \texttt{match()} y reporte de errores}
 
 \lstinputlisting[style=fuente, firstline=10, lastline=71, firstnumber=10,
@@ -841,6 +895,7 @@ así un solo error no produce varios mensajes.
 lookahead es de la clase \cmd{t}, avanza; si no, reporta que se esperaba \cmd{t}.
 \end{itemize}
 
+\needspace{6\baselineskip}
 \subsubsection*{Recuperación en modo pánico}
 
 \lstinputlisting[style=fuente, firstline=73, lastline=93, firstnumber=73,
@@ -852,6 +907,7 @@ de un \cmd{while}, su bloque se salta completo y no queda un \cmd{\}} suelto (l�
 \cmd{\}} con \cmd{nivel} en cero no se consume (línea 84) porque cierra el bloque que contiene al
 error. Con \cmd{era\_if}, el \cmd{else} de un \cmd{if} con error también se salta.
 
+\needspace{6\baselineskip}
 \subsubsection*{Programa y sentencias}
 
 \lstinputlisting[style=fuente, firstline=95, lastline=127, firstnumber=95,
@@ -869,6 +925,7 @@ LL(1): el \cmd{switch} elige la producción 4, 5, 6 o 7 según el lookahead, y e
 $\nexists$ reporta el error.
 \end{itemize}
 
+\needspace{6\baselineskip}
 \subsubsection*{Declaraciones y asignación}
 
 \lstinputlisting[style=fuente, firstline=129, lastline=176, firstnumber=129,
@@ -879,6 +936,7 @@ terminal, una llamada. \cmd{lista\_id()} e \cmd{inicializacion()} tienen producc
 $\varepsilon$: solo entran a la alternativa larga si el lookahead es \cmd{,} o \cmd{=}; en otro
 caso no consumen nada y el \cmd{;} lo verifica \cmd{declaracion()}.
 
+\needspace{6\baselineskip}
 \subsubsection*{Estructuras de control}
 
 \lstinputlisting[style=fuente, firstline=178, lastline=222, firstnumber=178,
@@ -889,6 +947,7 @@ lo consume, y si no, aplica $\varepsilon$. \cmd{resto\_else()} distingue \cmd{el
 \cmd{else \{} por el token siguiente (producciones 19 y 20). \cmd{bloque()} reutiliza
 \cmd{lista\_sentencias()}, así que los bloques pueden anidarse a cualquier profundidad.
 
+\needspace{6\baselineskip}
 \subsubsection*{Condiciones y expresiones}
 
 \lstinputlisting[style=fuente, firstline=224, lastline=293, firstnumber=224,
@@ -900,6 +959,7 @@ operador de su nivel: es la producción $\varepsilon$, y el token queda para la 
 llamó. \cmd{F()} tiene un caso por cada producción 38 a 41 y un \cmd{default} que corresponde a
 las celdas $\nexists$ de su fila.
 
+\needspace{6\baselineskip}
 \subsubsection*{Punto de entrada}
 
 \lstinputlisting[style=fuente, firstline=295, lastline=303, firstnumber=295,
@@ -908,6 +968,7 @@ caption={\texttt{src/sintactico.c}, punto de entrada}, label=cod:sin-entrada]{..
 Recibe el buffer, coloca el lookahead en el primer token, analiza \nt{programa} y devuelve
 cuántos errores sintácticos encontró.
 
+\needspace{8\baselineskip}
 \subsection{Programa principal: \texttt{main.c}}
 
 \lstinputlisting[style=fuente, caption={\texttt{src/main.c}}, label=cod:main]{../src/main.c}
@@ -975,6 +1036,7 @@ Esta sección sigue un solo caso, el programa de ejemplo de la asignación, desd
 hasta el resultado. Las figuras son capturas de una terminal de Linux con los comandos
 ejecutados en la carpeta del repositorio.
 
+\needspace{8\baselineskip}
 \subsection{Compilación}
 
 \captura{captura_01_compilacion.png}{Compilación del proyecto con \cmd{make}.}
@@ -983,6 +1045,7 @@ ejecutados en la carpeta del repositorio.
 de \cmd{src/lexico.l} con Flex y compila ese archivo junto con \cmd{sintactico.c} y
 \cmd{main.c}. \cmd{gcc} se ejecuta con \cmd{-Wall -Wextra} y no muestra ninguna advertencia.
 
+\needspace{8\baselineskip}
 \subsection{Programa de entrada}
 
 \captura{captura_02_entrada.png}{Programa de ejemplo de la asignación
@@ -991,6 +1054,7 @@ de \cmd{src/lexico.l} con Flex y compila ese archivo junto con \cmd{sintactico.c
 El programa declara dos variables, hace dos asignaciones, un \cmd{if} y un \cmd{while}, así que
 usa todas las construcciones mínimas que pide la asignación.
 
+\needspace{8\baselineskip}
 \subsection{Ejecución y lectura de la salida}
 
 \captura[height=0.84\textheight]{captura_03_ejecucion.png}{Salida completa del analizador para el
@@ -1019,6 +1083,7 @@ tabla~\ref{tab:sim1} y el árbol de la figura~\ref{fig:arbol}.
 código 0.
 \end{enumerate}
 
+\needspace{8\baselineskip}
 \subsection{El mismo programa con errores}
 
 Para ver el manejo de errores se modificó el ejemplo con tres errores: un carácter no válido en
@@ -1047,6 +1112,7 @@ error. El analizador sincroniza en ese \cmd{\}} y cierra el \cmd{while} normalme
 con código 1.
 \end{enumerate}
 
+\needspace{8\baselineskip}
 \subsection{Caso de error de la asignación}
 
 \captura{captura_06_parentesis.png}{Entrada \cmd{x = (10 + 5;} y su salida.}
@@ -1055,6 +1121,7 @@ El mensaje coincide con el de la asignación: \cmd{Error sintáctico en línea 1
 esperaba ')' antes de ';'.} La columna 12 es la del \cmd{;}, el primer token que no puede seguir
 a la expresión dentro del paréntesis. La tabla~\ref{tab:sim2} termina en el mismo punto.
 
+\needspace{8\baselineskip}
 \subsection{Batería de pruebas}
 
 \cmd{pruebas/validos} tiene seis programas que deben aceptarse y \cmd{pruebas/invalidos} ocho que
