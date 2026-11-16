@@ -1221,49 +1221,122 @@ La asignatura permite usar herramientas de inteligencia artificial si se declara
 instrucciones empleadas. En este proyecto se usó un asistente de IA generativa con acceso al
 navegador, que consultó en Classroom la asignación, la rúbrica y las presentaciones del curso. El
 asistente generó el código fuente, los casos de prueba y este documento, y preparó el historial
-de versiones del repositorio. El equipo revisó el contenido, ejecutó las pruebas y se encarga de
-la demostración.
+de versiones del repositorio. El equipo dio las instrucciones, revisó cada entrega parcial, pidió
+las correcciones, ejecutó las pruebas y se encarga de la demostración.
 
-Las instrucciones que definieron el contenido técnico del proyecto se presentan en el orden en
-que se dieron. La redacción está resumida y editada, y conserva el sentido de cada una.
+Las instrucciones se presentan en el orden en que se dieron, con la fecha y los commits del
+repositorio que resultaron de cada una. La redacción está resumida y editada y conserva el
+sentido de cada instrucción. Leídas en orden muestran cómo evolucionó el proyecto: primero la
+planeación y la implementación base, después una revisión contra la rúbrica y, al final, varias
+rondas de corrección sobre el formato, la notación y las evidencias.
 
-\begin{apartado}{INSTRUCCIÓN 1 \ \textbullet\ \ DESARROLLO DEL PROYECTO}
-Desarrolla el proyecto final de Compiladores conforme a la asignación y la rúbrica publicadas en
-Classroom. Toma de las presentaciones del profesor los métodos vistos en clase (expresiones
-regulares con Flex, gramáticas LL(1), análisis descendente recursivo y recuperación en modo
-pánico) y aplícalos sin sustituirlos por otras técnicas. Escribe código sencillo y fácil de
-mantener, y documentación con un registro técnico profesional. Publica el proyecto en un
-repositorio de GitHub con un commit por etapa e invita a los demás integrantes.
+\newcommand{\commits}[1]{\par\smallskip\noindent{\raggedright\footnotesize\textbf{Commits:} #1\par}}
+\newcommand{\hash}[1]{\texttt{#1}}
+
+\subsection*{Etapa 1: planeación e implementación base (9 de noviembre)}
+
+\begin{apartado}{INSTRUCCIÓN 1 \ \textbullet\ \ 9 NOV \ \textbullet\ \ OBJETIVO DEL PROYECTO}
+Desarrolla el proyecto final de Compiladores con base en la asignación y la rúbrica publicadas en
+Classroom. El profesor evalúa que se usen sus métodos, así que toma de sus presentaciones las
+técnicas vistas en clase (expresiones regulares y Flex para el léxico, gramática LL(1) con First,
+Follow y tabla de análisis, analizador descendente recursivo y recuperación en modo pánico) y
+no las sustituyas por otras. Escribe código sencillo, legible y sin dependencias innecesarias.
+Al terminar, el proyecto debe quedar en un repositorio de GitHub con un commit por etapa de
+trabajo y con invitación para los demás integrantes.
 \end{apartado}
 
-\begin{apartado}{INSTRUCCIÓN 2 \ \textbullet\ \ RECOPILACIÓN Y PLANEACIÓN}
-Antes de programar, reúne la asignación, la rúbrica y el material del curso, y redacta documentos
-de requisitos y de planeación que sirvan de contexto para el resto del trabajo. El repositorio se
-crea al final.
+\begin{apartado}{INSTRUCCIÓN 2 \ \textbullet\ \ 9 NOV \ \textbullet\ \ RECOPILACIÓN}
+Antes de escribir código, reúne la asignación, la rúbrica y las presentaciones de los temas 1.4 a
+4.4. Con eso redacta un documento de requisitos que relacione cada criterio de la rúbrica con un
+entregable, y uno de planeación con las decisiones de diseño, las fases y su estado. El
+repositorio se crea hasta que el proyecto esté terminado.
 \end{apartado}
 
-\begin{apartado}{INSTRUCCIÓN 3 \ \textbullet\ \ ALCANCE DE LA ENTREGA}
-Implementa el proyecto completo: analizadores, pruebas y documento técnico. Guarda el contexto
-del trabajo en archivos Markdown dentro de un archivo comprimido. Los integrantes son Andrés
-Basilio Illescas, Samuel Santiago Cruz Macedo y Jesús Jafet Fernández Hernandez.
+\begin{apartado}{INSTRUCCIÓN 3 \ \textbullet\ \ 9 NOV \ \textbullet\ \ IMPLEMENTACIÓN COMPLETA}
+Con la planeación aprobada, implementa el proyecto completo en etapas: definición de tokens,
+analizador léxico, analizador sintáctico, recuperación de errores, casos de prueba válidos e
+inválidos y README. Cada etapa debe compilar sin advertencias y pasar las pruebas existentes
+antes de pasar a la siguiente. Revisa también que el analizador acepte programas que el profesor
+podría usar al evaluar, aunque la asignación no los pida de forma explícita. La documentación
+técnica debe tener un registro profesional. Los integrantes del equipo son Andrés Basilio
+Illescas, Samuel Santiago Cruz Macedo y Jesús Jafet Fernández Hernandez.
+\commits{\hash{ff3d793} estructura inicial; \hash{579d224} analizador léxico;
+\hash{72a4270} analizador sintáctico LL(1); \hash{cc234c5} modo pánico; \hash{315c547} casos de
+prueba; \hash{62380c9} README; \hash{3db66d8} declaraciones con inicialización, agregada en la
+revisión de programas de prueba externos.}
 \end{apartado}
 
-\begin{apartado}{INSTRUCCIÓN 4 \ \textbullet\ \ REVISIÓN CONTRA LA RÚBRICA}
-Revisa el estado del proyecto frente a la rúbrica, identifica lo que falta y de qué depende, y
-haz los ajustes necesarios para obtener la calificación máxima.
+\subsection*{Etapa 2: revisión contra la rúbrica (14 de noviembre)}
+
+\begin{apartado}{INSTRUCCIÓN 4 \ \textbullet\ \ 14 NOV \ \textbullet\ \ AUDITORÍA DE PENDIENTES}
+Revisa el proyecto punto por punto contra la rúbrica y el enunciado. Indica qué está terminado,
+qué falta y de qué depende cada pendiente, y corrige lo necesario para obtener la calificación
+máxima.
+\commits{\hash{9ebbc5c} la salida ahora incluye la secuencia de tokens por línea, en el mismo
+formato del enunciado (\cmd{INT ID SEMICOLON}), que faltaba.}
 \end{apartado}
 
-\begin{apartado}{INSTRUCCIÓN 5 \ \textbullet\ \ AJUSTES DE FORMATO Y EJECUCIÓN}
-Adapta el documento técnico al formato LaTeX que el equipo usa en sus reportes y reduce su
-extensión. Simplifica la compilación y la ejecución de las pruebas para que el proyecto se corra
-con pocos comandos. Crea el repositorio en GitHub y envía las invitaciones a los integrantes.
+\begin{apartado}{INSTRUCCIÓN 5 \ \textbullet\ \ 14 NOV \ \textbullet\ \ PRUEBAS Y FORMATO}
+La ejecución y la revisión de pruebas deben ser sencillas para quien califica: pocos comandos,
+un resumen claro de qué casos se aceptan y cuáles se rechazan, y la salida completa de cada caso
+guardada en archivos. Rehaz el documento técnico con la plantilla LaTeX que el equipo usa en sus
+reportes (carátula de la Facultad, encabezado con materia y grupo) y reduce su extensión sin
+perder ningún punto de la rúbrica. Crea el repositorio en GitHub y envía las invitaciones.
+\commits{\hash{5e107ff} \cmd{make pruebas} con una línea por caso y salidas en
+\cmd{pruebas/resultados/}; \hash{22a6974} documento técnico en el formato del equipo.}
 \end{apartado}
 
-\begin{apartado}{INSTRUCCIÓN 6 \ \textbullet\ \ CONGRUENCIA CON EL CURSO Y EVIDENCIAS}
-Verifica que el proyecto use los métodos y la notación de las tareas de clase (First y Follow,
-tabla LL(1) con celdas sin correspondencia, simulación con pila). Usa los logos institucionales
-en blanco y negro. Documenta el código parte por parte y muestra, con capturas de la ejecución, un
-caso de ejemplo completo con su salida y sus errores.
+\subsection*{Etapa 3: correcciones de notación, evidencias y formato (14 y 15 de noviembre)}
+
+\begin{apartado}{INSTRUCCIÓN 6 \ \textbullet\ \ 14 NOV \ \textbullet\ \ NOTACIÓN DE CLASE}
+Compara el proyecto con las tareas 13 (simulaciones LL(1)) y 14 (análisis ascendente) y con el
+reporte de la primera entrega, y corrige cualquier diferencia de notación: las simulaciones deben
+usar las columnas Pila, Cadena y Acción con \emph{pop/avanza} y \emph{fin}, la tabla LL(1) debe
+ser la matriz completa con $\nexists$ en las celdas sin correspondencia y debe haber una
+simulación que termine en error. Usa los logos institucionales en blanco y negro.
+\commits{\hash{d0bc9d9} logos en blanco y negro; \hash{b87f916} simulaciones y tabla con la
+notación de clase.}
 \end{apartado}
+
+\begin{apartado}{INSTRUCCIÓN 7 \ \textbullet\ \ 14 NOV \ \textbullet\ \ CÓDIGO Y EVIDENCIAS}
+Documenta el código archivo por archivo, con los listados y sus números de línea, y explica qué
+hace cada bloque. Agrega un caso de ejemplo completo con capturas reales de la terminal: la
+compilación, el programa de entrada, la salida explicada parte por parte, el mismo programa con
+errores y cómo se recupera de cada uno, el caso de error de la asignación y la batería de
+pruebas.
+\commits{\hash{b87f916} sección de implementación y sección de funcionamiento con siete
+capturas.}
+\end{apartado}
+
+\begin{apartado}{INSTRUCCIÓN 8 \ \textbullet\ \ 14 NOV \ \textbullet\ \ CORRECCIÓN DE FORMATO}
+La tabla LL(1) quedó en una hoja horizontal que se ve girada y corta la última fila. Corrígela y
+revisa el documento completo para que no quede ningún otro error de formato: tablas cortadas,
+títulos solos al final de una página, páginas casi vacías o figuras fuera del margen.
+\commits{\hash{9c7e51a} tabla LL(1) en dos partes verticales, índice, tablas de simulación y
+diagrama de flujo corregidos.}
+\end{apartado}
+
+\begin{apartado}{INSTRUCCIÓN 9 \ \textbullet\ \ 15 NOV \ \textbullet\ \ PUBLICACIÓN}
+Haz público el repositorio con todo el código. Amplía este anexo para que las instrucciones
+muestren la evolución del proyecto y se puedan relacionar con los commits publicados.
+\commits{último commit del historial, que actualiza este anexo.}
+\end{apartado}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}c l X@{}}
+\toprule
+\textbf{Instrucción} & \textbf{Fecha} & \textbf{Resultado en el repositorio} \\
+\midrule
+1 a 3 & 9 nov & Analizadores, recuperación de errores, 14 casos de prueba y README (7 commits) \\
+4 & 14 nov & Secuencia de tokens por línea en la salida \\
+5 & 14 nov & Ejecución de pruebas simplificada y documento en el formato del equipo \\
+6 y 7 & 14 nov & Notación de clase, logos, código explicado y capturas \\
+8 & 14 nov & Corrección de formato del documento \\
+9 & 15 nov & Este anexo y publicación del repositorio \\
+\bottomrule
+\end{tabularx}
+\caption{Relación entre instrucciones y commits.}
+\end{table}
 
 \end{document}
