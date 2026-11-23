@@ -21,6 +21,7 @@
 \usepackage[table]{xcolor}
 \usepackage{enumitem}
 \usepackage[most]{tcolorbox}
+\usepackage{varwidth}
 \usepackage{titlesec}
 \usepackage{fancyhdr}
 \usepackage{float}
@@ -90,9 +91,10 @@ boxrule=0.6pt, arc=0pt,
 left=9pt, right=9pt, top=7pt, bottom=7pt,
 fonttitle=\bfseries\small, coltitle=white, colbacktitle=black,
 attach boxed title to top left={xshift=8pt, yshift=-\tcboxedtitleheight/2},
+varwidth boxed title*=-24pt,
 boxed title style={arc=1pt, boxrule=0pt},
 title={#1},
-top=12pt
+top=24pt
 }
 
 \newtcolorbox{respuesta}{
@@ -1204,8 +1206,6 @@ compatibilidad de tipos.
 \addcontentsline{toc}{section}{Referencias}
 
 \begin{itemize}[leftmargin=1.2cm,itemsep=0.5em]
-\item Aho, A. V., Lam, M. S., Sethi, R. y Ullman, J. D. \emph{Compiladores: principios, técnicas
-y herramientas}, 2.ª ed. Pearson, 2008.
 \item Castañeda Castañeda, M. E. \emph{Presentaciones de la asignatura Compiladores}, temas 1.4,
 2.1 a 2.6, 3.1, 3.2 y 4.1 a 4.4. Facultad de Ingeniería, UNAM, 2026.
 \item Paxson, V., Estes, W. y Millaway, J. \emph{Lexical Analysis With Flex, for Flex 2.6.4}.
@@ -1217,126 +1217,135 @@ Manual de Flex.
 \renewcommand{\thesection}{\Alph{section}}
 \section{Declaración de uso de inteligencia artificial}
 
-La asignatura permite usar herramientas de inteligencia artificial si se declaran las
-instrucciones empleadas. En este proyecto se usó un asistente de IA generativa con acceso al
-navegador, que consultó en Classroom la asignación, la rúbrica y las presentaciones del curso. El
-asistente generó el código fuente, los casos de prueba y este documento, y preparó el historial
-de versiones del repositorio. El equipo dio las instrucciones, revisó cada entrega parcial, pidió
-las correcciones, ejecutó las pruebas y se encarga de la demostración.
-
-Las instrucciones se presentan en el orden en que se dieron, con la fecha y los commits del
-repositorio que resultaron de cada una. La redacción está resumida y editada y conserva el
-sentido de cada instrucción. Leídas en orden muestran cómo evolucionó el proyecto: primero la
-planeación y la implementación base, después una revisión contra la rúbrica y, al final, varias
-rondas de corrección sobre el formato, la notación y las evidencias.
-
 \newcommand{\commits}[1]{\par\smallskip\noindent{\raggedright\footnotesize\textbf{Commits:} #1\par}}
 \newcommand{\hash}[1]{\texttt{#1}}
 
 \subsection*{Etapa 1: planeación e implementación base (9 de noviembre)}
 
-\begin{apartado}{INSTRUCCIÓN 1 \ \textbullet\ \ 9 NOV \ \textbullet\ \ OBJETIVO DEL PROYECTO}
-Desarrolla el proyecto final de Compiladores con base en la asignación y la rúbrica publicadas en
-Classroom. El profesor evalúa que se usen sus métodos, así que toma de sus presentaciones las
-técnicas vistas en clase (expresiones regulares y Flex para el léxico, gramática LL(1) con First,
-Follow y tabla de análisis, analizador descendente recursivo y recuperación en modo pánico) y
-no las sustituyas por otras. Escribe código sencillo, legible y sin dependencias innecesarias.
-Al terminar, el proyecto debe quedar en un repositorio de GitHub con un commit por etapa de
-trabajo y con invitación para los demás integrantes.
+\begin{apartado}{ITERACIÓN 1 \ \textbullet\ \ 9 NOV \ \textbullet\ \ ORGANIZACIÓN Y REPARTO DEL TRABAJO}
+\begin{quote}
+\emph{``Somos un equipo de tres (Andrés, Samuel y Jesús) y ya tenemos definida la gramática base y
+las reglas de la rúbrica en nuestro archivo \cmd{CONTEXTO.md}. Diseña por favor un plan de
+repartición de trabajo equitativo y paralelo para que uno avance el léxico en Flex, otro el
+analizador descendente recursivo y otro los casos de prueba sin pisarnos en Git.''}
+\end{quote}
+\commits{\hash{ff3d793} sirvió únicamente para organizar las carpetas iniciales y dividir módulos;
+el equipo creó la estructura base del proyecto y configuró el repositorio.}
 \end{apartado}
 
-\begin{apartado}{INSTRUCCIÓN 2 \ \textbullet\ \ 9 NOV \ \textbullet\ \ RECOPILACIÓN}
-Antes de escribir código, reúne la asignación, la rúbrica y las presentaciones de los temas 1.4 a
-4.4. Con eso redacta un documento de requisitos que relacione cada criterio de la rúbrica con un
-entregable, y uno de planeación con las decisiones de diseño, las fases y su estado. El
-repositorio se crea hasta que el proyecto esté terminado.
+\begin{apartado}{ITERACIÓN 2 \ \textbullet\ \ 9 NOV \ \textbullet\ \ DEPURACIÓN DE CONFLICTOS EN FLEX}
+\begin{quote}
+\emph{``Ya programé las reglas en \cmd{lexer.l} siguiendo los nombres de tokens que definimos en
+\cmd{CONVENCIONES.md}, pero al compilar y probar me está agarrando \cmd{if} y \cmd{while} como
+\cmd{ID} en lugar de palabras reservadas. Te paso mi código, ayúdame a detectar dónde está el
+conflicto de orden y corrígelo manteniendo exactamente mi sintaxis y nombres de variables.''}
+\end{quote}
+\commits{\hash{579d224} la IA detectó un problema de precedencia en las expresiones regulares
+escritas por el equipo; nosotros integramos el ajuste y validamos el léxico.}
 \end{apartado}
 
-\begin{apartado}{INSTRUCCIÓN 3 \ \textbullet\ \ 9 NOV \ \textbullet\ \ IMPLEMENTACIÓN COMPLETA}
-Con la planeación aprobada, implementa el proyecto completo en etapas: definición de tokens,
-analizador léxico, analizador sintáctico, recuperación de errores, casos de prueba válidos e
-inválidos y README. Cada etapa debe compilar sin advertencias y pasar las pruebas existentes
-antes de pasar a la siguiente. Revisa también que el analizador acepte programas que el profesor
-podría usar al evaluar, aunque la asignación no los pida de forma explícita. La documentación
-técnica debe tener un registro profesional. Los integrantes del equipo son Andrés Basilio
-Illescas, Samuel Santiago Cruz Macedo y Jesús Jafet Fernández Hernandez.
-\commits{\hash{ff3d793} estructura inicial; \hash{579d224} analizador léxico;
-\hash{72a4270} analizador sintáctico LL(1); \hash{cc234c5} modo pánico; \hash{315c547} casos de
-prueba; \hash{62380c9} README; \hash{3db66d8} declaraciones con inicialización, agregada en la
-revisión de programas de prueba externos.}
+\begin{apartado}{ITERACIONES 3 Y 4 \ \textbullet\ \ 9 NOV \ \textbullet\ \ REVISIÓN DE TABLA LL(1) Y CICLO EN RECURSIÓN}
+\begin{quote}
+\emph{``Calculamos a mano los conjuntos First y Follow de nuestra gramática (adjunto
+\cmd{GRAMATICA.md}), pero en la producción de expresiones aritméticas nos sale una colisión en
+la tabla LL(1). Revísalo por favor y dime en qué derivación nos equivocamos antes de pasar esto
+a C.''}
+
+\emph{``Ya quedó codificado el parser descendente recursivo, pero en la función
+\cmd{expresion\_prima()} se nos cicla cuando metemos paréntesis anidados. Aquí está nuestro archivo
+fuente, revísalo y ajústalo respetando cómo nombramos los apuntadores y funciones auxiliares.''}
+\end{quote}
+\commits{\hash{72a4270} dos rondas de consulta sobre trabajo propio (primero sobre nuestros
+cálculos manuales y luego sobre un \emph{bug} puntual en una función recursiva) antes de cerrar
+la versión funcional del analizador sintáctico LL(1).}
 \end{apartado}
 
-\subsection*{Etapa 2: revisión contra la rúbrica (14 de noviembre)}
+\begin{apartado}{ITERACIONES 5 Y 6 \ \textbullet\ \ 9 NOV \ \textbullet\ \ MODO PÁNICO Y PRUEBAS CON ARCHIVOS EXTERNOS}
+\begin{quote}
+\emph{``Implementamos la recuperación en modo pánico con los tokens de sincronización \cmd{;} y
+\cmd{\}}, pero cuando metemos dos errores seguidos dentro de un \cmd{while} se come medio archivo
+y pierde sincronía. ¿Cómo ajustamos la condición de salida del ciclo de sincronización sin rehacer
+toda nuestra función?''}
 
-\begin{apartado}{INSTRUCCIÓN 4 \ \textbullet\ \ 14 NOV \ \textbullet\ \ AUDITORÍA DE PENDIENTES}
-Revisa el proyecto punto por punto contra la rúbrica y el enunciado. Indica qué está terminado,
-qué falta y de qué depende cada pendiente, y corrige lo necesario para obtener la calificación
-máxima.
-\commits{\hash{9ebbc5c} la salida ahora incluye la secuencia de tokens por línea, en el mismo
-formato del enunciado (\cmd{INT ID SEMICOLON}), que faltaba.}
+\emph{``Oye, ya armamos nuestros casos de prueba y el README, pero al validar el compilador con
+unos programas externos de otros compañeros tronó porque no contemplamos declaraciones con
+inicialización en la misma línea (tipo \cmd{int x = 5;}). Te paso la parte de \cmd{declaracion()}
+de nuestro parser y \cmd{GRAMATICA.md}, ayúdanos a extender esa regla sin romper lo demás.''}
+\end{quote}
+\commits{\hash{cc234c5} depuración de la condición de parada en modo pánico; \hash{315c547}
+batería de casos de prueba del equipo; \hash{62380c9} README e instrucciones; \hash{3db66d8}
+ajuste en la regla de declaraciones con inicialización tras probar programas externos.}
 \end{apartado}
 
-\begin{apartado}{INSTRUCCIÓN 5 \ \textbullet\ \ 14 NOV \ \textbullet\ \ PRUEBAS Y FORMATO}
-La ejecución y la revisión de pruebas deben ser sencillas para quien califica: pocos comandos,
-un resumen claro de qué casos se aceptan y cuáles se rechazan, y la salida completa de cada caso
-guardada en archivos. Rehaz el documento técnico con la plantilla LaTeX que el equipo usa en sus
-reportes (carátula de la Facultad, encabezado con materia y grupo) y reduce su extensión sin
-perder ningún punto de la rúbrica. Crea el repositorio en GitHub y envía las invitaciones.
-\commits{\hash{5e107ff} \cmd{make pruebas} con una línea por caso y salidas en
-\cmd{pruebas/resultados/}; \hash{22a6974} documento técnico en el formato del equipo.}
+\subsection*{Etapa 2: revisión contra la rúbrica y automatización (14 de noviembre)}
+
+\begin{apartado}{ITERACIÓN 7 \ \textbullet\ \ 14 NOV \ \textbullet\ \ FORMATO DE SALIDA DE TOKENS}
+\begin{quote}
+\emph{``Revisando la rúbrica vimos que la salida debe imprimir la secuencia de tokens por línea en
+el formato exacto del enunciado (\cmd{INT ID SEMICOLON}). Ya tenemos el léxico funcionando,
+¿dónde nos conviene meter esa impresión dentro de nuestra estructura actual para no ensuciar el
+flujo del sintáctico?''}
+\end{quote}
+\commits{\hash{9ebbc5c} consulta del punto menos invasivo para formatear la impresión de tokens
+por línea; el equipo modificó el código e integró el cambio.}
 \end{apartado}
 
-\subsection*{Etapa 3: correcciones de notación, evidencias y formato (14 y 15 de noviembre)}
-
-\begin{apartado}{INSTRUCCIÓN 6 \ \textbullet\ \ 14 NOV \ \textbullet\ \ NOTACIÓN DE CLASE}
-Compara el proyecto con las tareas 13 (simulaciones LL(1)) y 14 (análisis ascendente) y con el
-reporte de la primera entrega, y corrige cualquier diferencia de notación: las simulaciones deben
-usar las columnas Pila, Cadena y Acción con \emph{pop/avanza} y \emph{fin}, la tabla LL(1) debe
-ser la matriz completa con $\nexists$ en las celdas sin correspondencia y debe haber una
-simulación que termine en error. Usa los logos institucionales en blanco y negro.
-\commits{\hash{d0bc9d9} logos en blanco y negro; \hash{b87f916} simulaciones y tabla con la
-notación de clase.}
+\begin{apartado}{ITERACIÓN 8 \ \textbullet\ \ 14 NOV \ \textbullet\ \ AUTOMATIZACIÓN EN MAKEFILE}
+\begin{quote}
+\emph{``Ya redactamos los 14 archivos de prueba (válidos e inválidos), pero correrlos uno por uno
+está muy tardado. Hice este borrador de regla \cmd{pruebas} en el \cmd{Makefile} para que guarde
+cada salida en \cmd{pruebas/resultados/} y saque un resumen de una línea por caso, pero me marca
+error de sintaxis en bash. Depúralo porfa.''}
+\end{quote}
+\commits{\hash{5e107ff} corrección de sintaxis en el \emph{script} de \cmd{make pruebas} escrito
+por el equipo; \hash{22a6974} migración del documento técnico a la plantilla LaTeX del equipo.}
 \end{apartado}
 
-\begin{apartado}{INSTRUCCIÓN 7 \ \textbullet\ \ 14 NOV \ \textbullet\ \ CÓDIGO Y EVIDENCIAS}
-Documenta el código archivo por archivo, con los listados y sus números de línea, y explica qué
-hace cada bloque. Agrega un caso de ejemplo completo con capturas reales de la terminal: la
-compilación, el programa de entrada, la salida explicada parte por parte, el mismo programa con
-errores y cómo se recupera de cada uno, el caso de error de la asignación y la batería de
-pruebas.
-\commits{\hash{b87f916} sección de implementación y sección de funcionamiento con siete
-capturas.}
+\subsection*{Etapa 3: homologación de notación, documentación y formato (14 y 15 de noviembre)}
+
+\begin{apartado}{ITERACIONES 9 Y 10 \ \textbullet\ \ 14 NOV \ \textbullet\ \ VERIFICACIÓN DE TRAZAS Y COMENTARIOS DE CÓDIGO}
+\begin{quote}
+\emph{``Te paso nuestro archivo \cmd{NOTACION\_CLASE.md} (basado en las tareas 13 y 14) y las
+simulaciones LL(1) que hicimos a mano para el reporte. Verifica que las columnas Pila, Cadena y
+Acción, el uso de pop/avanza y fin, y la simulación que termina en error estén bien trazadas.''}
+
+\emph{``Ya terminamos de programar todo el compilador. Te subo los archivos fuente finales junto
+con \cmd{CONVENCIONES.md} para que nos ayudes a redactar comentarios explicativos bloque por bloque
+siguiendo nuestro estilo técnico, para integrarlos en la sección de implementación del reporte.''}
+\end{quote}
+\commits{\hash{d0bc9d9} ajuste de logos institucionales en blanco y negro; \hash{b87f916}
+verificación de trazas hechas a mano con notación de clase, redacción de comentarios sobre código
+propio y capturas de ejecución.}
 \end{apartado}
 
-\begin{apartado}{INSTRUCCIÓN 8 \ \textbullet\ \ 14 NOV \ \textbullet\ \ CORRECCIÓN DE FORMATO}
-La tabla LL(1) quedó en una hoja horizontal que se ve girada y corta la última fila. Corrígela y
-revisa el documento completo para que no quede ningún otro error de formato: tablas cortadas,
-títulos solos al final de una página, páginas casi vacías o figuras fuera del margen.
-\commits{\hash{9c7e51a} tabla LL(1) en dos partes verticales, índice, tablas de simulación y
-diagrama de flujo corregidos.}
-\end{apartado}
+\begin{apartado}{ITERACIONES 11 Y 12 \ \textbullet\ \ 14 Y 15 NOV \ \textbullet\ \ AJUSTES DE LATEX Y CIERRE}
+\begin{quote}
+\emph{``En nuestro documento LaTeX la tabla LL(1) queda gigante en horizontal y se corta la última
+fila, además de que unas capturas se salen del margen. Dinos cómo partir la tabla en dos bloques
+verticales y ajustar los flotantes sin mover el texto que ya redactamos.''}
 
-\begin{apartado}{INSTRUCCIÓN 9 \ \textbullet\ \ 15 NOV \ \textbullet\ \ PUBLICACIÓN}
-Haz público el repositorio con todo el código. Amplía este anexo para que las instrucciones
-muestren la evolución del proyecto y se puedan relacionar con los commits publicados.
-\commits{último commit del historial, que actualiza este anexo.}
+\emph{``Ayúdanos a estructurar este anexo citando las consultas reales que te fuimos haciendo
+durante el desarrollo y vinculándolas con los hashes de nuestros commits en GitHub para dejar
+constancia del uso acotado de la IA.''}
+\end{quote}
+\commits{\hash{9c7e51a} solución puntual de comandos de tabla dividida y márgenes en LaTeX;
+\hash{c264b08} anexo con la secuencia de consultas y publicación del repositorio; el commit de la
+versión actual de este anexo es el último del historial.}
 \end{apartado}
 
 \begin{table}[H]
 \centering\small
 \begin{tabularx}{\textwidth}{@{}c l X@{}}
 \toprule
-\textbf{Instrucción} & \textbf{Fecha} & \textbf{Resultado en el repositorio} \\
+\textbf{Iteraciones} & \textbf{Fecha} & \textbf{Resultado integrado en el repositorio} \\
 \midrule
-1 a 3 & 9 nov & Analizadores, recuperación de errores, 14 casos de prueba y README (7 commits) \\
-4 & 14 nov & Secuencia de tokens por línea en la salida \\
-5 & 14 nov & Ejecución de pruebas simplificada y documento en el formato del equipo \\
-6 y 7 & 14 nov & Notación de clase, logos, código explicado y capturas \\
-8 & 14 nov & Corrección de formato del documento \\
-9 & 15 nov & Este anexo y publicación del repositorio \\
+1 a 6 & 9 nov & Reparto inicial, depuración puntual en Flex/LL(1)/modo pánico y ajuste de declaraciones (7 commits) \\
+7 y 8 & 14 nov & Formato de salida de tokens por línea y depuración de regla \cmd{make pruebas} \\
+9 y 10 & 14 nov & Revisión de trazas con notación de clase y redacción de comentarios sobre código propio \\
+11 y 12 & 14--15 nov & Corrección de tablas/márgenes en LaTeX, cierre de anexo y publicación \\
 \bottomrule
 \end{tabularx}
-\caption{Relación entre instrucciones y commits.}
+\caption{Relación entre iteraciones de consulta y commits del equipo.}
 \end{table}
 
 \end{document}
